@@ -1,0 +1,60 @@
+.no-gutter > [class*='col-'] {
+	padding-right:0;
+	padding-left:0;
+}
+
+.col-sm-3 .col-sm-6 {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.no-margin {
+	margin: 0 !important;
+}
+
+input:invalid {
+	box-shadow: 0 0 5px 2px red;
+}
+input:focus:invalid {
+	outline: none;
+}
+
+#ticket{
+	background-color:#00FF7F;
+	height: 280px;
+}
+
+#rightColumn{
+	background-color: #c4beff;
+	/*background: url(/resources/images/train-157837.svg);*/
+	height: 280px;
+}
+
+.col-sm-6{
+	 padding-left: 4vw;
+	 padding-right: 6vw;
+ }
+
+.col-sm-3{
+	padding-left: 4vw;
+	padding-right: 6vw;
+}
+#Pay{
+	margin-left: 2vw;
+	margin-bottom: 2vw;
+}
+
+.navbar-inverse {
+	background-color: #ffffff !important;
+	border-color: #ffffff !important;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #000000 !important;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+	color: #000000 !important;
+	background-color: transparent;
+}

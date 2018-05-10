@@ -1,0 +1,182 @@
+﻿$(function() {
+	$('#help_card_link').on('click', function(){
+		$('#help_card_image').slideToggle('normal');
+	});
+	/*$.mask.definitions['h'] = '[A-Za-z ]';
+	$('#number_card').mask("9999 9999 9999 9999999",{placeholder:'',autoclear:false});
+	$('#owner_card').mask('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',{placeholder:'',autoclear:false});
+	$('#cvv_card').mask("9999",{placeholder:'',autoclear:false});*/	
+
+	$('#number_card').inputmask("9999 9999 9999 9999999",{placeholder:'', clearIncomplete:false});
+	$('#owner_card').inputmask({ 
+		mask: "h", 
+		repeat: 50, 
+		placeholder:'', 
+		clearIncomplete:false, 
+		definitions: {
+			"h": {
+				validator: "[A-Za-z ]",
+				cardinality: 1,
+				casing: "upper"
+			}                
+		}
+	});
+	
+	$('#cvv_card').inputmask("9999",{placeholder:'',clearIncomplete:false});
+
+	var current_date = new Date(); 
+	var current_year = current_date.getFullYear();
+	for(var i = current_year; i <= (current_year + 10); i++){
+		$('#year_card').append( $('<option value="' + (i - 2000) + '">' + i + '</option>'));
+	}
+	
+	
+	$('[data-validate]').on('focus', function(){
+		var elem = $(this);
+		elem.removeClass('error').removeClass('valid');
+		elem.siblings('.error-text').hide('normal', function(){$(this).remove()});
+		elem.siblings('.valid-ok').remove();
+	});
+	
+	$('[data-validate]').on('change blur', function(){
+		var elem = $(this);
+		var validate_params = elem.attr('data-validate').split(',');
+		var value = elem.val();
+		for (i = 0; i < validate_params.length; i++) {						
+			if(validate_params[i] == 'required' && (!value || $.trim(value) == '')){
+				add_validation_error(elem, 'Обязательное поле');
+				return false;
+			}
+			
+			if(validate_params[i] == 'check_card_number'){
+				var real_value = value.replace(/ /g, '');
+				if(real_value.length < 12){
+					add_validation_error(elem, 'Недостаточно цифр');
+					return false;
+				}
+				if(!is_valid_credit_card(real_value)){
+					add_validation_error(elem, 'Введите тестовую карту');
+					return false;
+				}
+			}
+			
+			if(validate_params[i] == 'check_card_cvv'){
+				if(value.length < 3){
+					add_validation_error(elem, 'Недостаточно цифр');
+					return false;
+				}
+			}
+		}
+		elem.addClass('valid').removeClass('error');
+		elem.siblings('.error-text').remove();
+		elem.siblings('.valid-ok').remove();
+		if(elem.attr('data-custom-validate') == undefined){
+			$('<span class="valid-ok"></span>').insertAfter(elem);
+		}
+	});				
+	
+	$('#card_form [data-validate]').on('change blur paste keyup', function(){
+		if(check_valid_form()){
+			$('#submit_card_form').removeAttr('disabled');
+		} else{
+			$('#submit_card_form').attr('disabled', 'disabled');
+		}
+
+	});
+
+	$('#card_form').on('submit', function(){
+		if(!check_valid_form()){
+			return false;
+		}
+		var number_card_field = $('#number_card');
+		var number_card = number_card_field.val();
+		var field_name = number_card_field.attr('name');
+		number_card_field.removeAttr('name');
+		var real_number_card = number_card.replace(/ /g, '');
+		$('<input>').attr({
+			type: 'hidden',
+			value: real_number_card,
+			name: field_name
+		}).appendTo($(this));
+	})
+
+	//TEST GATEWAY AUTOFILL
+	$('#year_card').val(23);
+	$('#month_card').val("03");
+	if(check_valid_form()){
+		$('#submit_card_form').removeAttr('disabled');
+	} else{
+		$('#submit_card_form').attr('disabled', 'disabled');
+	}
+				
+});
+
+function add_validation_error(elem, text){
+	elem.addClass('error').removeClass('valid');
+	elem.siblings('.error-text').remove();
+	elem.siblings('.valid-ok').remove();
+	var error_div = $('<div class="error-text">' + text + '</div>');
+	if(elem.attr('data-custom-validate') == undefined){
+		error_div.insertAfter(elem).show('fast');
+	} else{
+		elem.parent().append(error_div);
+		error_div.show('fast');
+	}
+}
+
+function check_valid_form(){
+	var elems = $('#card_form').find('[data-validate]');
+	var is_valid = true;
+	elems.each(function() {
+		elem = $(this);
+		var validate_params = elem.attr('data-validate').split(',');
+		var value = elem.val();
+		for (i = 0; i < validate_params.length; i++) {						
+			if(validate_params[i] == 'required' && (!value || $.trim(value) == '')){
+				is_valid = false;
+				return false;
+			}
+			
+			if(validate_params[i] == 'check_card_number'){
+				var real_value = value.replace(/ /g, '');
+				if(real_value.length < 12){
+					is_valid = false;
+					return false;
+				}
+				if(!is_valid_credit_card(real_value)){
+					is_valid = false;
+					return false;
+				}
+			}
+			
+			if(validate_params[i] == 'check_card_cvv'){
+				if(value.length < 3){
+					is_valid = false;
+					return false;
+				}
+			}
+		}
+	});
+	return is_valid;	
+}
+
+function is_valid_credit_card(card_number){
+	var sum = 0;
+	var val;
+	if (card_number.match(/^51004772800/)===null)
+		return false;
+	for (var i = (card_number.length - 1); i >= 0 ; i--) {
+		if ((i % 2) == 1) {
+			val = card_number.charAt(i);
+		} else {
+			val = card_number.charAt(i) * 2;
+			if (val > 9){
+				val = val - 9;
+			}
+		}
+		sum = sum + parseInt(val);
+	}
+	return ((sum % 10) == 0);
+}
+
+function number_format(e,t,n,r){var i,s,o,u,a;if(isNaN(t=Math.abs(t))){t=2}if(n==undefined){n=","}if(r==undefined){r="."}i=parseInt(e=(+e||0).toFixed(t))+"";if((s=i.length)>3){s=s%3}else{s=0}a=s?i.substr(0,s)+r:"";o=i.substr(s).replace(/(\d{3})(?=\d)/g,"$1"+r);u=t?n+Math.abs(e-i).toFixed(t).replace(/-/,0).slice(2):"";return a+o+u}
