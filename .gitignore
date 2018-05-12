@@ -1,3 +1,5 @@
+.idea
+
 -# User-specific stuff
 -.idea/**/workspace.xml
 -.idea/**/tasks.xml
@@ -24,3 +26,4 @@
 -
 -# Editor-based Rest Client
 -.idea/httpRequests
+.idea/
