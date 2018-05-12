@@ -9,20 +9,20 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.quartz.*;
-import org.springframework.ui.velocity.VelocityEngineFactoryBean;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.util.Properties;
 
 
@@ -71,8 +71,19 @@ public class ApplicationConfig {
      * <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
      *
      */
-    @Bean(name = "dataSource")
-    public DriverManagerDataSource getDriverManagerDataSource() {
+//    @Bean(name = "dataSource")
+//    public DriverManagerDataSource getDriverManagerDataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName(driverClass);
+//        dataSource.setUrl(jdbcUrl);
+//        dataSource.setUsername(jdbcUserName);
+//        dataSource.setPassword(jdbcPassword);
+//        return dataSource;
+//    }
+
+    //new
+    @Bean
+    public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(jdbcUrl);
@@ -81,14 +92,10 @@ public class ApplicationConfig {
         return dataSource;
     }
 
-    /**
-     * <jdbc:initialize-database data-source="dataSource">
-     * initialize Embedded DataSource. Встроенная база данных
-     */
     @Bean
     public DataSourceInitializer dataSourceInitializer() {
         final DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(getDriverManagerDataSource());
+        initializer.setDataSource(dataSource());
         initializer.setDatabasePopulator(getDatabasePopulator());
         return initializer;
     }
@@ -104,36 +111,49 @@ public class ApplicationConfig {
      * <bean id="entityManagerFactory"
      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
      */
-    @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean getLocalContainerEntityManagerFactoryBean() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+    //new
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em
+                = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
         em.setPackagesToScan(new String[] {"ru.novand.OrientExpress.domain.entities"});
-        //em.setPackagesToScan(JPA_PACKAGES);
-        em.setDataSource(getDriverManagerDataSource());
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        ((HibernateJpaVendorAdapter)vendorAdapter).setGenerateDdl(true);
-        ((HibernateJpaVendorAdapter)vendorAdapter).setShowSql(true);
         em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(additionalProperties());
 
+        return em;
+    }
+
+    //new
+    @Bean
+    public PlatformTransactionManager transactionManager(
+            EntityManagerFactory emf){
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+
+        return transactionManager;
+    }
+
+    //new
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    //new
+    Properties additionalProperties() {
         Properties jpaProperties = new Properties();
         jpaProperties.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
         jpaProperties.put("hibernate.show_sql",true);
         jpaProperties.put("hibernate.use_sql_comments",true);
         jpaProperties.put("hibernate.format_sql","true");
-        jpaProperties.put("hibernate.hbm2ddl.auto","validate");
-        //jpaProperties.put("hibernate.dialect","org.hibernate.dialect.HSQLDialect");
+//        jpaProperties.put("hibernate.hbm2ddl.auto","validate");
 
-        em.setJpaProperties(jpaProperties);
-        return em;
+        return jpaProperties;
     }
 
-    @Bean(name = "jpaTransactionManager")
-    public JpaTransactionManager getJpaTransactionManager() {
-        JpaTransactionManager jpa = new JpaTransactionManager();
-        jpa.setEntityManagerFactory(getLocalContainerEntityManagerFactoryBean().getNativeEntityManagerFactory());
-        return jpa;
-    }
 
 
 }

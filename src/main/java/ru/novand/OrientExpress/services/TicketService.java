@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-//@Transactional //need to update\delete queries.
 @Service
 public class TicketService {
 
@@ -41,27 +40,20 @@ public class TicketService {
     @Autowired
     private TrainDAO trainDAO;
 
-    public Ticket saveTicket(String trainCode, String fromSt, String toSt, String depdate, Passenger passenger) throws CustomSQLException {
+    public Ticket saveTicket(String trainCode, String fromSt, String toSt, Date depdate, Passenger passenger) throws CustomSQLException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date depdateFormat = null;
-        try {
-            depdateFormat = formatter.parse(depdate);
-        } catch (ParseException ex) {
-        }
-
-        Ticket ticket = new Ticket(passenger, trainCode, depdateFormat);
+        Ticket ticket = new Ticket(passenger, trainCode, depdate);
         ticketDAO.save(ticket);
         return ticket;
     }
 
-    public boolean checkVacantPlaces(int trainCode, LocalDate depdateFormat) {
+    public boolean checkVacantPlaces(int trainCode, Date depdateFormat) {
         int tickets = ticketDAO.countTicketsOnTrain(String.valueOf(trainCode),depdateFormat);
         int ticketsAvalible = trainDAO.findByCode(String.valueOf(trainCode)).getTrainSeats();
         return (ticketsAvalible <= tickets);
     }
 
-    public boolean isPassengerAlreadyRegistered(int trainCode, LocalDate depdateFormat, Passenger passenger) {
+    public boolean isPassengerAlreadyRegistered(int trainCode, Date depdateFormat, Passenger passenger) {
         List<Passenger> passengerList = ticketDAO.GetAllPassengersByTrain(String.valueOf(trainCode),depdateFormat);
         return passengerList.contains(passenger);
     }

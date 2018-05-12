@@ -9,27 +9,15 @@
         <table  class="footable table table-stripped" data-page-size="" >
             <thead>
             <tr>
-
-
-                <%--<th data-type="numeric" data-sort-initial="true">#</th>--%>
                 <th>Train number</th>
-                <th>Departure Date</th>
                 <th>Arrival Date</th>
-                <th></th>
-                <%--<th>Station from</th>--%>
-                <%--<th>Station to</th>--%>
             </tr>
             </thead>
             <tbody id="tableRow">
             <c:forEach items="${results}" var="res">
                 <tr class="resultRow">
                     <td class="traincode">${res.traincode}</td>
-                    <td class="departuredate" hidden>${res.departuredate}</td>
-                    <td >Date: <fmt:formatDate value="${res.departuredate}" pattern="dd.MM.yyyy"/> Time: <fmt:formatDate value="${res.departuredate}" pattern="HH:mm"/></td>
-                    <td>Date: <fmt:formatDate value="${res.arrivaldate}" pattern="dd.MM.yyyy"/> Time: <fmt:formatDate value="${res.arrivaldate}" pattern="HH:mm"/></td>
-                    <td>
-                        <i class="material-icons right">navigate_next</i>
-                    </td>
+                    <td class="arrivaldate">Date: <fmt:formatDate value="${res.arrivaldate}" pattern="dd.MM.yyyy"/> Time: <fmt:formatDate value="${res.arrivaldate}" pattern="HH:mm"/></td>
                 </tr>
             </c:forEach>
             </tbody>

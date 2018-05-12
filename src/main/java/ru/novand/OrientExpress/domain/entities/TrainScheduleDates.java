@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "TRAINSCHEDULEDATES")
+@NamedQuery(name = "TrainScheduleDates.findAll", query = "FROM TrainScheduleDates")
 public class TrainScheduleDates implements Serializable{
 
     @Id
@@ -15,8 +16,9 @@ public class TrainScheduleDates implements Serializable{
     @Column(name = "TRAINSCHEDULE_ID")
     private int idtrainschedule;
 
-    @Column(name = "TRAIN_ID")
-    private int idTrain;
+    @ManyToOne
+    @JoinColumn(name = "TRAIN_ID")
+    private Train train;
 
     @NotEmpty
     @Column(name = "DEPARTUREDATE")
@@ -30,12 +32,12 @@ public class TrainScheduleDates implements Serializable{
         this.idtrainschedule = idtrainschedule;
     }
 
-    public int getIdTrain() {
-        return idTrain;
+    public Train getTrain() {
+        return train;
     }
 
-    public void setIdTrain(int idTrain) {
-        this.idTrain = idTrain;
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
     public Date getDeparturedate() {
@@ -44,5 +46,8 @@ public class TrainScheduleDates implements Serializable{
 
     public void setDeparturedate(Date departuredate) {
         this.departuredate = departuredate;
+    }
+
+    public TrainScheduleDates() {
     }
 }

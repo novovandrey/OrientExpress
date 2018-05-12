@@ -1,6 +1,7 @@
 package ru.novand.OrientExpress.domain.DAO.Impl;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TicketDAO;
 import ru.novand.OrientExpress.domain.entities.Passenger;
 import ru.novand.OrientExpress.domain.entities.Schedule;
@@ -20,6 +21,7 @@ public class TicketDAOImpl implements TicketDAO {
     @PersistenceContext
     private EntityManager manager;
 
+    @Transactional
     @Override
     public Ticket save(Ticket entity) {
         try {
@@ -64,30 +66,24 @@ public class TicketDAOImpl implements TicketDAO {
         return result;
     }
 
-    public Date convertToDateViaInstant(LocalDate dateToConvert) {
-        return java.util.Date.from(dateToConvert.atStartOfDay()
-                .atZone(ZoneId.systemDefault())
-                .toInstant());
-    }
-
     @Override
-    public int countTicketsOnTrain(String trainCode, LocalDate departuredate) {
+    public int countTicketsOnTrain(String trainCode, Date departuredate) {
         String query = "Select count(t) from Ticket t where t.trainCode = :trainCode and t.departuredate = :departuredate";
         Query q = manager.createQuery(query);
 
         q.setParameter("trainCode", trainCode);
-        q.setParameter("departuredate", convertToDateViaInstant(departuredate));
+        q.setParameter("departuredate", departuredate);
         return Integer.parseInt(q.getSingleResult().toString());
     }
 
     @Override
-    public List<Passenger> GetAllPassengersByTrain(String trainCode, LocalDate departuredate) {
+    public List<Passenger> GetAllPassengersByTrain(String trainCode, Date departuredate) {
 
         List<Passenger> passengers = new ArrayList<Passenger>();
 
         TypedQuery<Ticket> query = manager.createNamedQuery("Ticket.findTicketsByTrainCode", Ticket.class);
         query.setParameter("trainCode", trainCode);
-        query.setParameter("departuredate", convertToDateViaInstant(departuredate));
+        query.setParameter("departuredate", departuredate, TemporalType.DATE);
         List<Ticket> tickets = query.getResultList();
 
         for (Ticket ticket:tickets) {

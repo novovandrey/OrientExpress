@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import ru.novand.OrientExpress.domain.dto.ScheduleDto;
+import ru.novand.OrientExpress.domain.entities.Schedule;
 import ru.novand.OrientExpress.domain.entities.Station;
 import ru.novand.OrientExpress.domain.entities.TrainRoute;
+import ru.novand.OrientExpress.services.MapViewService;
 import ru.novand.OrientExpress.services.ScheduleService;
 
 import javax.annotation.security.RolesAllowed;
@@ -71,11 +73,14 @@ public class ScheduleController {
         BigDecimal tariffvalue = BigDecimal.valueOf(0);
         boolean flag=true;
 
+        List<String> citylist = new ArrayList<>();
+
         while (flag)
         {
             for(ScheduleDto aSiteId: tariff) {
                 if (curVertex.equals(aSiteId.getDepstationname()))
                 {
+                    citylist.add(curVertex);
                     prevVertex = curVertex;
                     curVertex = aSiteId.getArrstationname();
 
@@ -96,6 +101,7 @@ public class ScheduleController {
 
         mv.addObject("tariffvalue", tariffvalue);
         mv.addObject("tariffOrdered", tariffOrdered);
+        mv.addObject("routelist", citylist);
 
         List<TrainRoute> trainRouteList = scheduleService.GetTrainRoute(traincode,departuredate);
         mv.addObject("trainRouteList", trainRouteList);
@@ -108,6 +114,32 @@ public class ScheduleController {
         mv.addObject("trainCode", traincode);
         mv.addObject("fromSt", fromSt);
         mv.addObject("toSt", toSt);
+
+        return mv;
+    }
+
+    @RequestMapping(value = "/stationschedule", method= RequestMethod.GET)
+    public ModelAndView InitStationSchedule() {
+
+        System.out.println("scheduleController InitStationSchedule is called");
+
+        ModelAndView mv = new ModelAndView("/stationschedule");
+
+        List<Station> stations = scheduleService.GetAllStations();
+        java.sql.Date myDate = new java.sql.Date(System.currentTimeMillis());
+        mv.addObject("stationsResult", stations);
+        mv.addObject("curDate", myDate);
+        return mv;
+    }
+
+    @RequestMapping(value = "/stationscheduleData", method= RequestMethod.GET)
+    public ModelAndView GetStationscheduleData(@RequestParam String fromSt, @RequestParam String arrivaldate,
+                                              HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("scheduleController GetScheduleByStation is called");
+        List<ScheduleDto> result = scheduleService.GetScheduleByStation(fromSt);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/scheduleByStationData");
+        mv.addObject("results", result);
 
         return mv;
     }

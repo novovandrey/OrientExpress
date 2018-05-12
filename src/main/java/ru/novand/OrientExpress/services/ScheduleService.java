@@ -4,16 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.novand.OrientExpress.domain.DAO.interfaces.StationDAO;
+import ru.novand.OrientExpress.domain.DAO.interfaces.TrainScheduleDatesDAO;
 import ru.novand.OrientExpress.domain.dto.ScheduleDto;
-import ru.novand.OrientExpress.domain.entities.Station;
-import ru.novand.OrientExpress.domain.entities.TrainRoute;
+import ru.novand.OrientExpress.domain.entities.*;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +31,9 @@ public class ScheduleService {
 
     @Autowired
     private StationDAO stationDAO;
+
+    @Autowired
+    private TrainScheduleDatesDAO trainScheduleDatesDAO;
 
     public List<Station> GetAllStations() {
         //TODO bcrypt for md5hash
@@ -118,6 +124,33 @@ public class ScheduleService {
                 .setParameter("traincode", traincode)
                 .getResultList();
         return scheduleDTOS;
+    }
+
+    Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+        return java.util.Date
+                .from(dateToConvert.atZone(ZoneId.systemDefault())
+                        .toInstant());
+    }
+
+    public List<ScheduleDto> GetScheduleByStation(String stationname) {
+        List<Schedule> scheduleList = stationDAO.getTrains(stationname);
+        List<TrainScheduleDates> trainscheduledatesList = trainScheduleDatesDAO.findAll();
+        List<ScheduleDto> scheduleDTOList = new ArrayList<ScheduleDto>();
+        LocalDateTime ld;
+
+        for (Schedule schedule:scheduleList) {
+            for (TrainScheduleDates trainScheduleDates:trainscheduledatesList) {
+                if (trainScheduleDates.getTrain().getTrainCode().equals(schedule.getTrain().getTrainCode()))
+                {
+                    Instant instant = trainScheduleDates.getDeparturedate().toInstant();
+                    ld =instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    ld.plusHours(schedule.getInterval());
+                    scheduleDTOList.add(new ScheduleDto(schedule.getTrain().getTrainCode(),convertToDateViaInstant(ld)));
+                }
+            }
+        }
+
+        return scheduleDTOList;
     }
 
 }

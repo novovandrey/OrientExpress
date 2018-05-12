@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "TRAINROUTE")
+@NamedQuery(name = "TrainRoute.findAll", query = "FROM TrainRoute")
 public class TrainRoute implements Serializable {
 
     @Id

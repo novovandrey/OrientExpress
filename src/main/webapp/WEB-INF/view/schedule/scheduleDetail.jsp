@@ -3,29 +3,54 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<script>
+    $(function() {
+        $('.modal').modal();
+    });
+</script>
+<div class="card-panel col s12" style="height: 300px">
 
     <c:if test="${!empty departureDate}">
 
-        <security:authorize access="hasAnyRole('ROLE_USER')">
-            <button type="button" class="btn" id="buyTicket">Buy Ticket</button>
-        </security:authorize>
-
-
-        <security:authorize access="isAnonymous()">
-            <p>Please be authorize to buy tickets</p>
-        </security:authorize>
-
-        <div class="controls controls-row">
+        <p style="padding-bottom: 1%">
             <input hidden class="depdate" name ="depdate" value="${departureDate}"/>
             <input hidden class="trcode" name="trcode" value="${trainCode}"/>
             <input hidden class="fromStation" value="${fromSt}"/>
             <input hidden class="toStation" value="${toSt}"/>
-            <span class="help-inline">Ticket cost: </span>
-            <span>${tariffvalue}</span>
-            <a class="btn" href="">Route</a>
-        </div>
+            <b><span class="help-inline">Ticket cost: </span>
+                <span><strong>${tariffvalue}</strong></span></b>
+        </p>
+        <p style="padding-bottom: 1%">
+            <!-- Modal Trigger -->
+            <button id ="modalShow" data-target="modal1" class="btn modal-trigger">Route</button>
+            <!-- Modal Structure -->
+            <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <div id="map" style="width: 800px; height: 440px; border: 1px solid #AAA;"></div>
+
+
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok</a>
+            </div>
+            </div>
+        </p>
+
+        <p style="padding-bottom: 1%">
+            <security:authorize access="hasAnyRole('ROLE_USER')">
+                <button type="button" class="btn" id="buyTicket">Buy Ticket</button>
+            </security:authorize>
+
+            <security:authorize access="isAnonymous()">
+                <p>Please be authorize to buy tickets</p>
+            </security:authorize>
+        </p>
 
     </c:if>
+
     <c:if test="${empty departureDate}">
-        There is no detail to the train.
+        <div class="card-panel grey lighten-2">There is no detail to the train</div>
     </c:if>
+</div>
+<%--<script type='text/javascript' src='/resources/maps/markers.json'></script>--%>
+<%--<script type='text/javascript' src='/resources/maps/custom_leaflet.js'></script>--%>

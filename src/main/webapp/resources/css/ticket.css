@@ -21,13 +21,13 @@ input:focus:invalid {
 
 #ticket{
 	background-color:#00FF7F;
-	height: 280px;
+	height: 330px;
 }
 
 #rightColumn{
 	background-color: #c4beff;
 	/*background: url(/resources/images/train-157837.svg);*/
-	height: 280px;
+	height: 330px;
 }
 
 .col-sm-6{

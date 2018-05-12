@@ -2,6 +2,7 @@ package ru.novand.OrientExpress.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,11 +24,15 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 public class TicketController {
+
+    //exceptionhandler
 
     @Autowired
     private TicketService ticketService;
@@ -40,8 +45,20 @@ public class TicketController {
 
         System.out.println("TicketController BuyTicket is called");
 
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDate depdateFormatDate = LocalDate.parse(departuredate,formatter );
+
+        LocalDateTime depdateFormatTime = LocalDateTime.parse(departuredate,formatter );
+
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String depdateFormatDateStr = depdateFormatDate.format(formatter);
+
+        formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String depdateFormatTimeStr = depdateFormatTime.format(formatter); // "1986-04-08 12:30"
+
         ModelAndView mv = new ModelAndView("/ticketprocess");
-        mv.addObject("departuredate", departuredate);
+        mv.addObject("departuredate", depdateFormatDateStr );
+        mv.addObject("departuretime", depdateFormatTimeStr );
         mv.addObject("departurestation", departurestation);
         mv.addObject("arrivalstation", arrivalstation);
         mv.addObject("traincode", traincode);
@@ -57,50 +74,71 @@ public class TicketController {
     @RequestMapping(value = "/payTicket", method= RequestMethod.GET)
     @ResponseBody
         public ModelAndView payTicket(@RequestParam String FamilyName, @RequestParam String FirstName, @RequestParam String BirthDate, @RequestParam String SeatNumber
-            ,@RequestParam String traincode,@RequestParam String fromSt, @RequestParam String toSt,@RequestParam String depdate
-            ,HttpServletRequest request, HttpServletResponse response) {
+            ,@RequestParam String traincode,@RequestParam String fromSt, @RequestParam String toSt,@RequestParam String depdate ,@RequestParam String deptime
+            ,HttpServletRequest request, HttpServletResponse response,ModelMap model) {
         // if we here then we need to booking a number and store order in the db
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate BirthDateFormat = LocalDate.parse(BirthDate, formatter);
 
-        LocalDate depdateFormat = LocalDate.parse(depdate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate depdateFormat = LocalDate.parse(depdate, formatter);
 
         boolean checkTickets = true;
         boolean checkPassengers = true;
         boolean checkTime = true;
         boolean success = false;
 
-        if (ticketService.checkVacantPlaces(Integer.parseInt(traincode),depdateFormat)) {
+        if (ticketService.checkVacantPlaces(Integer.parseInt(traincode),convertToDateViaInstant(depdateFormat))) {
             //if train has no available seats
             checkTickets = false;
         }
-        if (ticketService.isPassengerAlreadyRegistered(Integer.parseInt(traincode),depdateFormat, new Passenger(FirstName, FamilyName, convertToDateViaInstant(BirthDateFormat)))) {
+        if (ticketService.isPassengerAlreadyRegistered(Integer.parseInt(traincode),convertToDateViaInstant(depdateFormat), new Passenger(FirstName, FamilyName, convertToDateViaInstant(BirthDateFormat)))) {
             checkPassengers = false;
         }
 
-        LocalTime depdateTimeFormat = LocalTime.parse(depdate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        LocalTime currentTime = LocalTime.now().plusMinutes(10);
-
-        if ( currentTime.isAfter(depdateTimeFormat)) {
+        LocalDateTime currentTime = LocalDateTime.now().plusMinutes(10);
+        String depdatetime = depdate + " " + deptime;
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        LocalDateTime depdatetimeFormat = LocalDateTime.parse(depdatetime, formatter);
+        if ( currentTime.isAfter(depdatetimeFormat)) {
             checkTime = false;
         }
 
         if(checkTickets&&checkPassengers&&checkTime)
         {
             Passenger passenger = passengerService.createPasseneger(FirstName, FamilyName, convertToDateViaInstant(BirthDateFormat));
-            //Ticket result = ticketService.saveTicket(traincode, fromSt, toSt, depdate, passenger);
+            Ticket result = ticketService.saveTicket(traincode, fromSt, toSt, convertToDateViaInstant(depdateFormat), passenger);
             success = true;
         }
 
         System.out.println("payTicket is called" + success);
 
-        //ModelAndView mv = new ModelAndView("/paygate.html");
+        String msg="Somebody went wrong!";
+        String classIdent;
+        if(success){
+            classIdent= "alert-success";
+            msg = "Congratulate your bought a ticket";
+        }
+        else {
+            classIdent= "alert-danger";
+            if (!checkTickets)
+                msg = "Unfortunately, there is no available seats on the train. Ticket is not purchased";
 
-        ModelAndView mv = new ModelAndView("/ticketprocess");
+            if (!checkPassengers)
+                msg = "Unfortunately, there is has the same passenger on the train. Ticket is not purchased";
+
+            if (!checkTime)
+                msg = "Unfortunately, less than 10 minutes left before the departure of the train. Ticket is not purchased";
+
+        }
+
+        ModelAndView mv = new ModelAndView("/ticketIsPurchased");
 
         mv.addObject("ticketResult", success);
+        mv.addObject("classIdent", classIdent);
+        mv.addObject("msg", msg);
+
         return mv;
 
     }

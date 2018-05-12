@@ -92,6 +92,11 @@ public class ScheduleDto {
         this.arrstationname = arrstationname;
     }
 
+    public ScheduleDto(String traincode, Date ardate) {
+        this.traincode = traincode;
+        this.arrivaldate = ardate;
+    }
+
     public ScheduleDto(String traincode, String depstationname, String arrstationname, int iterator) {
         this.traincode = traincode;
         this.depstationname = depstationname;

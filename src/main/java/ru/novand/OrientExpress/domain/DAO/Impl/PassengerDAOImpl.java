@@ -7,7 +7,6 @@ import ru.novand.OrientExpress.domain.entities.Passenger;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;

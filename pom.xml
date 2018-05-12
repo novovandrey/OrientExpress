@@ -8,6 +8,7 @@
     <artifactId>OrientExpress</artifactId>
     <version>1.0</version>
 
+
     <properties>
         <!-- Generic properties -->
         <java.version>1.8</java.version>
@@ -17,8 +18,10 @@
         <jstl.version>1.2</jstl.version>
         <servlet.version>3.1.0</servlet.version>
 
+        <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
+
         <!-- Spring -->
-        <spring-framework.version>4.2.4.RELEASE</spring-framework.version>
+        <spring-framework.version>4.3.8.RELEASE</spring-framework.version>
 
         <!-- JUnit test -->
         <junit.version>4.12</junit.version>
@@ -29,14 +32,11 @@
         <slf4j.version>1.7.13</slf4j.version>
 
         <!-- jackson json JSON Processing API -->
-        <jackson.databind-version>2.2.3</jackson.databind-version>
+        <jackson.databind-version>2.9.4</jackson.databind-version>
 
         <!-- Hibernate / JPA -->
-        <hibernate.version>5.0.1.Final</hibernate.version>
-        <!-- I don't know why, but with 5.0.5 final app not working! -->
-
-        <!-- Spring Data -->
-        <spring-framework.data.version>1.9.1.RELEASE</spring-framework.data.version>
+        <!--<hibernate.version>5.0.1.Final</hibernate.version>-->
+        <hibernate.version>5.2.10.Final</hibernate.version>
 
         <!-- Quartz scheduling framework -->
         <quartz.scheduling.version>2.2.1</quartz.scheduling.version>
@@ -44,35 +44,59 @@
         <!-- Spring Security -->
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
 
+        <spring.version>5.0.3.RELEASE</spring.version>
+        <spring-jpa.version>1.11.3.RELEASE</spring-jpa.version>
     </properties>
 
-    <dependencyManagement>
-        <!--all spring dependencies -->
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!--<dependencyManagement>-->
+        <!--&lt;!&ndash;all spring dependencies &ndash;&gt;-->
+        <!--<dependencies>-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework</groupId>-->
+                <!--<artifactId>spring-framework-bom</artifactId>-->
+                <!--<version>${spring-framework.version}</version>-->
+                <!--<type>pom</type>-->
+                <!--<scope>import</scope>-->
+            <!--</dependency>-->
+        <!--</dependencies>-->
+    <!--</dependencyManagement>-->
 
 
-    <!--bootstrap webjars.org-->
     <dependencies>
+
+        <!-- SPRING -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.9.9</version>
-        </dependency>
-
-        <!-- Spring MVC -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
         </dependency>
 
         <!-- Other Servlet Web dependencies -->
@@ -133,6 +157,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <!--JUnit Test-->
         <dependency>
@@ -146,14 +171,15 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-context-support</artifactId>-->
+            <!--<version>${spring-framework.version}</version>-->
+        <!--</dependency>-->
 
         <!-- Spring REST jackson JSON Processing API -->
         <dependency>
@@ -163,6 +189,12 @@
         </dependency>
 
         <!--Hibernate ORM-->
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-core</artifactId>-->
+            <!--<version>${hibernate.version}</version>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -174,13 +206,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>5.1.0.Final</version>
-        </dependency>
-
-        <!--Spring Data-->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-framework.data.version}</version>
         </dependency>
 
         <!--Spring Security-->
@@ -214,15 +239,28 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.2.10</version>
+            <version>2.3.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+            <!--<version>5.1.39</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.39</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <version>${mysql-connector-java.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-jpa.version}</version>
         </dependency>
 
         <!-- Logging with SLF4J & LogBack -->
@@ -238,6 +276,8 @@
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
         </dependency>
+
+
 
     </dependencies>
 

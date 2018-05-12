@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -22,15 +23,18 @@ public class Ticket implements Serializable {
     @Column(name = "IDTICKET")
     private int idTicket;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "PASSENGER_ID")
     private Passenger passenger;
 
+    @NotEmpty
     @Size(min = 0, max = 255)
     @Column(name = "TRAINCODE")
     private String trainCode;
 
-    @NotEmpty
+    @Temporal(TemporalType.DATE)
+    @NotNull
     @Column(name = "DEPARTUREDATE")
     private Date departuredate;
 

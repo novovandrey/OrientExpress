@@ -3,6 +3,7 @@ package ru.novand.OrientExpress.domain.entities;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class Passenger implements Serializable {
     @Column(name = "FAMILYNAME")
     private String familyname;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "BIRTHDATE")
     private Date birthdate;
 
@@ -77,7 +78,7 @@ public class Passenger implements Serializable {
     }
 
     public Passenger() {
-        System.out.println("Passenger");
+
     }
 
     public Passenger(String firstname, String familyname, Date birthdate) {

@@ -36,10 +36,10 @@ public class Station implements Serializable {
     @Column(name = "STATIONNAME")
     private String stationname;
 
-    @OneToMany(mappedBy = "arrivalstation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "arrivalstation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> arrschedulelist = new ArrayList<>();
 
-    @OneToMany(mappedBy = "departurestation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "departurestation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> depschedulelist = new ArrayList<>();
 
     public int getIdStation() {
