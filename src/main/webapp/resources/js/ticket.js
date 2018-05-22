@@ -1,10 +1,13 @@
 $(function() {
+
+    M.updateTextFields();
+    var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
+
         $(document).on('click', '#Pay', function() {
 
         if(document.querySelector('input[name="FamilyName"]').validity.valid&&
             document.querySelector('input[name="FirstName"]').validity.valid &&
-            document.querySelector('input[name="BirthDate"]').validity.valid&&
-            document.querySelector('input[name="SeatNumber"]').validity.valid)
+            document.querySelector('input[name="BirthDate"]').validity.valid)
         {
             var datareq = $("#ticket :input").serialize();
             var routeinfo = $("#routeInfo :input").serialize();

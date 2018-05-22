@@ -32,7 +32,7 @@ public class Station implements Serializable {
     private int idStation;
 
     @NotEmpty
-    @Size(min = 5, max = 20)
+    @Size(min = 5, max = 255)
     @Column(name = "STATIONNAME")
     private String stationname;
 
@@ -72,6 +72,13 @@ public class Station implements Serializable {
 
     public void setDepschedulelist(List<Schedule> depschedulelist) {
         this.depschedulelist = depschedulelist;
+    }
+
+    public Station(String stationname) {
+        this.stationname = stationname;
+    }
+
+    public Station() {
     }
 
     @Override

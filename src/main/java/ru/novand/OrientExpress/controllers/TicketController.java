@@ -1,64 +1,68 @@
 package ru.novand.OrientExpress.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import ru.novand.OrientExpress.domain.DAO.interfaces.PassengerDAO;
+import ru.novand.OrientExpress.domain.dto.ScheduleDTO;
 import ru.novand.OrientExpress.domain.entities.Passenger;
-import ru.novand.OrientExpress.domain.entities.Station;
 import ru.novand.OrientExpress.domain.entities.Ticket;
+import ru.novand.OrientExpress.exception.RouteNotExistingException;
 import ru.novand.OrientExpress.services.PassengerService;
 import ru.novand.OrientExpress.services.ScheduleService;
 import ru.novand.OrientExpress.services.TicketService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 public class TicketController {
 
-    //exceptionhandler
+    //todo exceptionhandler
 
     @Autowired
     private TicketService ticketService;
 
     @Autowired
+    private ScheduleService scheduleService;
+
+    @Autowired
     private PassengerService passengerService;
 
-    @RequestMapping(value = "/buyTicket", method= RequestMethod.GET)
-    public ModelAndView buyTicket(@RequestParam String traincode, @RequestParam String departuredate,@RequestParam String departurestation, @RequestParam String arrivalstation,HttpServletRequest request, HttpServletResponse response) {
+    @Autowired
+    private MessageSource messageSource;
 
+    private static final Logger logger = LoggerFactory.getLogger(TicketController.class);
+    DateTimeFormatter ddMMyyyyformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+    @RequestMapping(value = "/buyTicket", method= RequestMethod.GET)
+    public ModelAndView buyTicket(@RequestParam String traincode, @RequestParam String departuredate,
+                                  @RequestParam String departurestation, @RequestParam String arrivalstation,
+                                  HttpServletRequest request, HttpServletResponse response)  throws Exception {
+
+        //todo switch off js and try buy ticket
         System.out.println("TicketController BuyTicket is called");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        LocalDate depdateFormatDate = LocalDate.parse(departuredate,formatter );
+        String departureDateFormat = ticketService.convertDateTimeToDate_ddMMyyyy(departuredate);
+        boolean routeListExist = scheduleService.checkSchedule(departurestation,arrivalstation,departureDateFormat);
 
-        LocalDateTime depdateFormatTime = LocalDateTime.parse(departuredate,formatter );
+        if (!routeListExist) throw new RouteNotExistingException(departurestation,arrivalstation,traincode,departuredate );
 
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String depdateFormatDateStr = depdateFormatDate.format(formatter);
-
-        formatter = DateTimeFormatter.ofPattern("HH:mm");
-        String depdateFormatTimeStr = depdateFormatTime.format(formatter); // "1986-04-08 12:30"
+        List<String> dateTimeStr = ticketService.convertISODateTimeToDateAndTime(departuredate);
 
         ModelAndView mv = new ModelAndView("/ticketprocess");
-        mv.addObject("departuredate", depdateFormatDateStr );
-        mv.addObject("departuretime", depdateFormatTimeStr );
+        mv.addObject("departuredate", dateTimeStr.get(0) );
+        mv.addObject("departuretime", dateTimeStr.get(1) );
         mv.addObject("departurestation", departurestation);
         mv.addObject("arrivalstation", arrivalstation);
         mv.addObject("traincode", traincode);
@@ -71,18 +75,16 @@ public class TicketController {
                 .toInstant());
     }
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/payTicket", method= RequestMethod.GET)
     @ResponseBody
-        public ModelAndView payTicket(@RequestParam String FamilyName, @RequestParam String FirstName, @RequestParam String BirthDate, @RequestParam String SeatNumber
+        public ModelAndView payTicket(@RequestParam String FamilyName, @RequestParam String FirstName,  @RequestParam String BirthDate, @RequestParam(value = "SeatNumber", required=false) String SeatNumber
             ,@RequestParam String traincode,@RequestParam String fromSt, @RequestParam String toSt,@RequestParam String depdate ,@RequestParam String deptime
             ,HttpServletRequest request, HttpServletResponse response,ModelMap model) {
         // if we here then we need to booking a number and store order in the db
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate BirthDateFormat = LocalDate.parse(BirthDate, formatter);
-
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate depdateFormat = LocalDate.parse(depdate, formatter);
+        LocalDate BirthDateFormat = LocalDate.parse(BirthDate, ddMMyyyyformatter);
+        LocalDate depdateFormat = LocalDate.parse(depdate, ddMMyyyyformatter);
 
         boolean checkTickets = true;
         boolean checkPassengers = true;
@@ -93,46 +95,46 @@ public class TicketController {
             //if train has no available seats
             checkTickets = false;
         }
-        if (ticketService.isPassengerAlreadyRegistered(Integer.parseInt(traincode),convertToDateViaInstant(depdateFormat), new Passenger(FirstName, FamilyName, convertToDateViaInstant(BirthDateFormat)))) {
+        if (ticketService.isPassengerAlreadyRegistered(Integer.parseInt(traincode),convertToDateViaInstant(depdateFormat), new Passenger(FirstName, FamilyName, BirthDateFormat))) {
             checkPassengers = false;
         }
 
+        Instant instant = Instant.now();
+
         LocalDateTime currentTime = LocalDateTime.now().plusMinutes(10);
         String depdatetime = depdate + " " + deptime;
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        LocalDateTime depdatetimeFormat = LocalDateTime.parse(depdatetime, formatter);
+        DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        LocalDateTime depdatetimeFormat = LocalDateTime.parse(depdatetime, formatterDateTime);
         if ( currentTime.isAfter(depdatetimeFormat)) {
             checkTime = false;
         }
 
-        if(checkTickets&&checkPassengers&&checkTime)
-        {
-            Passenger passenger = passengerService.createPasseneger(FirstName, FamilyName, convertToDateViaInstant(BirthDateFormat));
+        if (checkTickets && checkPassengers && checkTime) {
+            String username = request.getUserPrincipal().getName();
+            Passenger passenger = passengerService.createPasseneger(FirstName, FamilyName, BirthDateFormat, username);
             Ticket result = ticketService.saveTicket(traincode, fromSt, toSt, convertToDateViaInstant(depdateFormat), passenger);
             success = true;
         }
 
         System.out.println("payTicket is called" + success);
 
-        String msg="Somebody went wrong!";
+        String msg = messageSource.getMessage("unexpected_error", null, LocaleContextHolder.getLocale());
         String classIdent;
-        if(success){
-            classIdent= "alert-success";
-            msg = "Congratulate your bought a ticket";
-        }
-        else {
-            classIdent= "alert-danger";
+        if (success) {
+            classIdent = "alert-success";
+            msg = messageSource.getMessage("success_processpay", null, LocaleContextHolder.getLocale());
+        } else {
+            classIdent = "alert-danger";
             if (!checkTickets)
-                msg = "Unfortunately, there is no available seats on the train. Ticket is not purchased";
+                msg = messageSource.getMessage("no_seats", null, LocaleContextHolder.getLocale());
 
             if (!checkPassengers)
-                msg = "Unfortunately, there is has the same passenger on the train. Ticket is not purchased";
+                msg = messageSource.getMessage("passengerAlreadyExists", null, LocaleContextHolder.getLocale());
 
             if (!checkTime)
-                msg = "Unfortunately, less than 10 minutes left before the departure of the train. Ticket is not purchased";
+                msg = messageSource.getMessage("less10min", null, LocaleContextHolder.getLocale());
 
         }
-
         ModelAndView mv = new ModelAndView("/ticketIsPurchased");
 
         mv.addObject("ticketResult", success);
@@ -141,6 +143,36 @@ public class TicketController {
 
         return mv;
 
+    }
+
+    @RequestMapping(value = "/getAllPassengers", method= RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getAllPassengers(@RequestParam String traincode,@RequestParam String arrivaldate,HttpServletRequest request, HttpServletResponse response) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate arrivaldateFormat = LocalDate.parse(arrivaldate, formatter);
+
+        List<Passenger> passengerlist = ticketService.getAllPassengers(traincode,convertToDateViaInstant(arrivaldateFormat)) ;
+
+        ModelAndView mv = new ModelAndView("/passengers_resp");
+        mv.addObject("passengerlist", passengerlist);
+
+        return mv;
+
+    }
+
+    @ExceptionHandler(RouteNotExistingException.class)
+    public ModelAndView handleRouteNotExistingException(HttpServletRequest request,
+                                                        Exception ex){
+        logger.error("Requested URL="+request.getRequestURL());
+        logger.error("Exception Raised="+ex);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("route", ex);
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("error");
+
+        return modelAndView;
     }
 
 }

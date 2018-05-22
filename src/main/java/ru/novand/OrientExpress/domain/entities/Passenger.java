@@ -6,12 +6,20 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
 @Entity
 @Table(name = "PASSENGER")
+@NamedQueries({
+        @NamedQuery(name = "Passenger.find", query = "FROM Passenger where idpassenger= :passengerid"),
+        @NamedQuery(name = "Passenger.findbyUserID", query = "FROM Passenger where user.idUser= :userid"),
+        @NamedQuery(name = "Passenger.findbyUserName", query = "FROM Passenger where user.username= :username")
+})
 public class Passenger implements Serializable {
+
+    //TODO add registrationID, registrationdate, updatorID, updatedate
 
     private static final long serialVersionUID = 1L;
 
@@ -32,10 +40,17 @@ public class Passenger implements Serializable {
 
     @NotNull
     @Column(name = "BIRTHDATE")
-    private Date birthdate;
+    //todo instant
+    private LocalDate birthdate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     @OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ticket> ticketList;
+
+    public Passenger() {}
 
     public int getIdpassenger() {
         return idpassenger;
@@ -61,11 +76,11 @@ public class Passenger implements Serializable {
         this.familyname = familyname;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -77,11 +92,15 @@ public class Passenger implements Serializable {
         this.ticketList = ticketList;
     }
 
-    public Passenger() {
-
+    public User getUser() {
+        return user;
     }
 
-    public Passenger(String firstname, String familyname, Date birthdate) {
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Passenger(String firstname, String familyname, LocalDate birthdate) {
         this.firstname = firstname;
         this.familyname = familyname;
         this.birthdate = birthdate;

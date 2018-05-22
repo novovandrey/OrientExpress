@@ -11,5 +11,6 @@ public interface TicketDAO extends GenDAO<Ticket> {
 
     public int countTicketsOnTrain(String trainCode, Date departuredate);
     public List<Passenger> GetAllPassengersByTrain(String trainCode, Date departuredate);
+    public List<Ticket> getTicketByPassengerID(int passengerId);
 }
 

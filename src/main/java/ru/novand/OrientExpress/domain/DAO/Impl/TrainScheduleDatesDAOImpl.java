@@ -1,11 +1,14 @@
 package ru.novand.OrientExpress.domain.DAO.Impl;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Repository;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TrainScheduleDatesDAO;
 import ru.novand.OrientExpress.domain.entities.TrainScheduleDates;
+import ru.novand.OrientExpress.exception.CustomSQLException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -17,7 +20,14 @@ public class TrainScheduleDatesDAOImpl implements TrainScheduleDatesDAO {
 
     @Override
     public TrainScheduleDates save(TrainScheduleDates entity) {
-        return null;
+
+        try {
+            manager.persist(entity);
+        } catch (PersistenceException ex) {
+            throw new CustomSQLException("Can not save TrainScheduleDates: " + ex);
+        }
+        return entity;
+
     }
 
     @Override

@@ -19,7 +19,7 @@
             </nav>
 
             <c:if test="${!empty ticketResult}">
-                <div style="margin-top: 6vw;" class="card-panel red lighten-2"><strong>${msg}</strong></div>
+                <div style="margin-top: 6vw;" class="card-panel indigo lighten-2"><strong>${msg}</strong></div>
             </c:if>
 
         </div>

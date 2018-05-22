@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.novand.OrientExpress.domain.DAO.interfaces.PassengerDAO;
+import ru.novand.OrientExpress.domain.DAO.interfaces.UserDAO;
 import ru.novand.OrientExpress.domain.entities.Passenger;
+import ru.novand.OrientExpress.domain.entities.User;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 import javax.persistence.EntityManager;
@@ -25,15 +27,29 @@ public class PassengerService {
     @Autowired
     private PassengerDAO passengerDAO;
 
+    @Autowired
+    private UserDAO userDAO;
+
     private static final Logger logger = LoggerFactory.getLogger(PassengerService.class);
 
-    public Passenger createPasseneger(String firstName, String familyname, Date birthday) throws CustomSQLException {
+    public Passenger createPasseneger(String firstName, String familyname, LocalDate birthday,String username) throws CustomSQLException {
         logger.debug("createPasseneger method was called");
         Passenger passeneger = new Passenger();
         passeneger.setFirstname(firstName);
         passeneger.setFamilyname(familyname);
         passeneger.setBirthdate(birthday);
+
+        User user = userDAO.findByName(username);
+
+        passeneger.setUser(user);
+
         Passenger result = passengerDAO.save(passeneger);
+        return result;
+    }
+
+    public Passenger getPassengerByUserName(String username) throws CustomSQLException {
+
+        Passenger result = passengerDAO.findByUserName(username);
         return result;
     }
 

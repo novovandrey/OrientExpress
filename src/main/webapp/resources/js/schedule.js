@@ -1,9 +1,17 @@
 $(function() {
+    $('select').formSelect();
+    M.updateTextFields();
+    var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
+
     $('#tableResult').hide(1);
     $('#tableResultDetail').hide(1);
     $( "#getSchedule" ).click(function( ) {
         $('#tableResult').hide(1);
         $('#tableResultDetail').hide(1);
+        if ($( 'input[name="fromSt"]').val()===$( 'input[name="toSt"]').val()){
+            alert("Station from and station to is the same")
+            return false;
+        }
         if(document.querySelector('input[name="fromSt"]').validity.valid&&
             document.querySelector('input[name="toSt"]').validity.valid &&
             document.querySelector('input[name="departuredate"]').validity.valid)
@@ -26,12 +34,15 @@ $(function() {
     });
 
     $(document).on('click', '#tableRow>.resultRow', function() {
+        $('#tableRow tr').removeClass("active");
+
+        $(this).addClass("active");
         var trainData = {};
         trainData.traincode =  $(this).find('.traincode').text();
         trainData.departuredate = $(this).find('.departuredate').text();
         trainData.fromSt =  $('input[name="fromSt"]').val();
         trainData.toSt = $('input[name="toSt"]').val();
-
+        //todo
         $.ajax({
             type: "GET",
             url: "http://localhost:8080/scheduleDetail",

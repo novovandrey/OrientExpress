@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "Schedule.GetAllScheduleList", query = "FROM Schedule"),
         @NamedQuery(name = "Schedule.GetScheduleByID", query = "FROM Schedule where schedule_id = :schedule_id"),
-        @NamedQuery(name = "Schedule.GetAllTrainsByStName", query = "FROM Schedule where arrivalstation.stationname in (:stationName)")
+        @NamedQuery(name = "Schedule.GetAllTrainsByStName", query = "FROM Schedule where departurestation.stationname in (:stationName)")
 })
 public class Schedule implements Serializable {
 
@@ -41,6 +41,9 @@ public class Schedule implements Serializable {
 
     @Column(name = "INTERVAL_M")
     private int interval;
+
+    public Schedule() {
+    }
 
     public int getSchedule_id() {
         return schedule_id;

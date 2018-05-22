@@ -11,13 +11,17 @@ import ru.novand.OrientExpress.domain.entities.Station;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 
-@Repository("stationDao")
+@Repository("stationDAO")
 public class StationDAOImpl implements StationDAO {
 
     @PersistenceContext
     private EntityManager manager;
 
+    public StationDAOImpl() {
+    }
+
     @Override
+    @Transactional
     public Station save(Station entity) {
         try {
             manager.persist(entity);
@@ -28,7 +32,7 @@ public class StationDAOImpl implements StationDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+
     public List<Station> findAll() {
         TypedQuery<Station> query = manager.createNamedQuery("Station.GetAllStationList", Station.class);
         List<Station> result = query.getResultList();
@@ -57,19 +61,6 @@ public class StationDAOImpl implements StationDAO {
 
     public Station findById(int id) {
         Station result = manager.find(Station.class, id);
-        return result;
-    }
-
-    @Override
-    public List<Schedule> getTrains(String stationName) {
-        List<Schedule> result = null;
-        try {
-            TypedQuery<Schedule> query = manager.createNamedQuery("Schedule.GetAllTrainsByStName", Schedule.class);
-            query.setParameter("stationName", stationName);
-            result = query.getResultList();
-        } catch (PersistenceException ex) {
-            throw new CustomSQLException(ex.getMessage());
-        }
         return result;
     }
 

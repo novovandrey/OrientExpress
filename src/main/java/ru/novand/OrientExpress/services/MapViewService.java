@@ -21,24 +21,19 @@ public class MapViewService {
 
     private static final Logger logger = LoggerFactory.getLogger(PassengerService.class);
 
-    public List<MapPointDTO> GetJsonMarkers( List<String> citylist ) throws CustomSQLException {
+    public List<MapPointDTO> getJsonMarkers( List<String> cityList ) throws CustomSQLException {
         logger.debug("GetJsonMarkers method was called");
 
         List<MapPointDTO> maps = new ArrayList<>();
 
-        System.out.println("ScheduleService GetTrainTariff is called");
+        System.out.println("ScheduleService getTrainTariff is called");
 
         Query queryObject= (Query) entityManager.createQuery ("select new ru.novand.OrientExpress.domain.dto.MapPointDTO(gc.city_en,gc.lat,gc.lng) from GeoCity gc where gc.city_en IN (:cities) and gc.country_en ='Russia' ");
-        queryObject.setParameterList("cities", (citylist));
+        queryObject.setParameterList("cities", (cityList));
 
         maps.addAll(queryObject.list());
 
-        Collections.sort(maps, new Comparator<MapPointDTO>() {
-            @Override
-            public int compare(MapPointDTO c1, MapPointDTO c2) {
-                return Double.compare(c1.getSortfield(), c2.getSortfield());
-            }
-        });
+        maps.sort((c1, c2) -> Double.compare(c1.getSortfield(), c2.getSortfield()));
         
         return  maps;
 

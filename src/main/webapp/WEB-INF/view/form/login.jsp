@@ -44,19 +44,19 @@
 
                 <h2 class="form-signin-heading"> Please, login</h2>
 
-                <label for="inputEmail" class="sr-only"><spring:message code="email" text="Email"/></label>
+                <label for="inputEmail" class="sr-only"><spring:message code="login"/></label>
                 <input id="inputEmail" class="form-control validate" name="j_username" value="admin@gmail.com" required autofocus/>
 
-                <label for="inputPassword" class="sr-only"><spring:message code="pass" text="Password"/></label>
+                <label for="inputPassword" class="sr-only"><spring:message code="pass"/></label>
                 <input type="password" id="inputPassword" class="form-control validate" name="j_password" value="12345" required/>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="rememberme"  name="_spring_security_remember_me"/>Remember me
-                    </label>
-                </div>
-                <input type="submit" value="Войти" class="btn waves-effect waves-light" >
-                <br/>
+                <%--<div class="checkbox">--%>
+                    <%--<label>--%>
+                        <%--<input type="checkbox" id="rememberme"  name="_spring_security_remember_me"/>Remember me--%>
+                    <%--</label>--%>
+                <%--</div>--%>
+                <button type="submit" class="btn waves-effect waves-light" >Login</button>
+                <br/><br/>
                 <a href="javascript:history.back()">Back</a>
 
                 <br /><br />

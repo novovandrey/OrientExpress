@@ -10,14 +10,14 @@ public class UserController {
 //
 //        @RequestMapping(value = "/user/registration", method = RequestMethod.GET)
 //        public String showRegistrationForm(WebRequest request, Model model) {
-//            UserDto userDto = new UserDto();
+//            UserDTO userDto = new UserDTO();
 //            model.addAttribute("user", userDto);
 //            return "registration";
 //        }
 //
 //    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
 //    public ModelAndView registerUserAccount(
-//            @ModelAttribute("user") @Valid UserDto accountDto,
+//            @ModelAttribute("user") @Valid UserDTO accountDto,
 //            BindingResult result,
 //            WebRequest request,
 //            Errors errors) {
@@ -36,7 +36,7 @@ public class UserController {
 //            return new ModelAndView("successRegister", "user", accountDto);
 //        }
 //    }
-//    private User createUserAccount(UserDto accountDto, BindingResult result) {
+//    private User createUserAccount(UserDTO accountDto, BindingResult result) {
 //        User registered = null;
 //        try {
 //            registered = userService.registerNewUserAccount(accountDto);

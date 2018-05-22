@@ -3,7 +3,7 @@ package ru.novand.OrientExpress.domain.DAO.interfaces;
 import java.io.Serializable;
 import java.util.List;
 
-interface GenDAO<T extends Serializable> {
+interface GenDAO <T extends Serializable> {
 
     T save(T entity);
 

@@ -4,9 +4,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "USER")
+@NamedQuery(name = "User.findByName", query = "FROM User where username= :username")
 public class User {
 
     @Id
@@ -31,6 +34,9 @@ public class User {
 
     @Column(name="ENABLED")
     private boolean enabled;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Passenger> passengerlist = new ArrayList<>();
 
     public int getIdUser() {
         return idUser;
@@ -62,6 +68,22 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Passenger> getPassengerlist() {
+        return passengerlist;
+    }
+
+    public void setPassengerlist(List<Passenger> passengerlist) {
+        this.passengerlist = passengerlist;
     }
 
     @Override

@@ -5,13 +5,14 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TrainDAO;
 import ru.novand.OrientExpress.domain.entities.Schedule;
 import ru.novand.OrientExpress.domain.entities.Train;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 
-@Repository("trainDao")
+@Repository("trainDAO")
 public class TrainDAOImpl implements TrainDAO {
 
     @PersistenceContext
@@ -20,7 +21,9 @@ public class TrainDAOImpl implements TrainDAO {
     public TrainDAOImpl() {
     }
 
+
     @Override
+    @Transactional
     public Train save(Train entity) {
         try {
             manager.persist(entity);
@@ -30,7 +33,6 @@ public class TrainDAOImpl implements TrainDAO {
         return entity;
     }
 
-    @Override
     public List<Train> findAll() {
         List<Train> result = null;
         TypedQuery<Train> query = manager.createNamedQuery("Train.findAll", Train.class);
@@ -38,7 +40,6 @@ public class TrainDAOImpl implements TrainDAO {
         return result;
     }
 
-    @Override
     public Train delete(Train entity) {
         try {
             manager.remove(entity);
@@ -48,7 +49,6 @@ public class TrainDAOImpl implements TrainDAO {
         return entity;
     }
 
-    @Override
     public Train update(Train entity) {
         try {
             manager.merge(entity);
@@ -58,13 +58,11 @@ public class TrainDAOImpl implements TrainDAO {
         return entity;
     }
 
-    @Override
     public Train findById(int id) {
         Train result = manager.find(Train.class, id);
         return result;
     }
 
-    @Override
     public Train findByCode(String code) {
 
         TypedQuery<Train> query = manager.createNamedQuery("Train.findByCode", Train.class);

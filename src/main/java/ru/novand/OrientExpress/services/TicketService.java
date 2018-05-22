@@ -1,35 +1,27 @@
 package ru.novand.OrientExpress.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.novand.OrientExpress.domain.DAO.interfaces.StationDAO;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TicketDAO;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TrainDAO;
-import ru.novand.OrientExpress.domain.dto.ScheduleDto;
+import ru.novand.OrientExpress.domain.dto.ScheduleDTO;
 import ru.novand.OrientExpress.domain.entities.Passenger;
-import ru.novand.OrientExpress.domain.entities.Station;
 import ru.novand.OrientExpress.domain.entities.Ticket;
-import ru.novand.OrientExpress.domain.entities.TrainRoute;
 import ru.novand.OrientExpress.exception.CustomSQLException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class TicketService {
+
+    DateTimeFormatter ddMMyyyyformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -58,5 +50,40 @@ public class TicketService {
         return passengerList.contains(passenger);
     }
 
+
+    public List<Passenger> getAllPassengers(String trainCode, Date depdate) throws CustomSQLException {
+
+        return ticketDAO.GetAllPassengersByTrain (trainCode,depdate);
+    }
+
+    public List<Ticket> getTicketByPassengerID(int passengerId) throws CustomSQLException {
+
+        return ticketDAO.getTicketByPassengerID (passengerId);
+    }
+
+    public String convertDateTimeToDate_ddMMyyyy(String departuredate)  {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime formatDateTime = LocalDateTime.parse(departuredate, formatter);
+        return formatDateTime.format(ddMMyyyyformatter);
+    }
+
+    public List<String> convertISODateTimeToDateAndTime(String departuredate)  {
+
+        List<String> dateTimeStr = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDate depdateFormatDate = LocalDate.parse(departuredate,formatter );
+
+        LocalDateTime depdateFormatTime = LocalDateTime.parse(departuredate,formatter );
+
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        dateTimeStr.add(depdateFormatDate.format(formatter));
+
+        formatter = DateTimeFormatter.ofPattern("HH:mm");
+        dateTimeStr.add(depdateFormatTime.format(formatter));
+
+        return dateTimeStr;
+    }
 
 }

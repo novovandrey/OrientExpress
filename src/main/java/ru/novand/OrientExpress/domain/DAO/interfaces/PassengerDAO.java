@@ -13,5 +13,6 @@ public interface PassengerDAO {
     public Passenger delete(Passenger entity);
     public Passenger update(Passenger entity);
     public Passenger findById(int id);
-
+    public Passenger findByUserId(int userid);
+    public Passenger findByUserName(String username);
 }

@@ -24,7 +24,6 @@ public class Train implements Serializable {
     @Column(name = "TRAIN_ID")
     private int idTrain;
 
-    @NotEmpty
     @Size(min = 0, max = 255)
     @Column(name = "TRAINNAME")
     private String trainname;
@@ -36,13 +35,17 @@ public class Train implements Serializable {
     @Column(name = "SEATSNUMBER")
     private int trainSeats;
 
-    //TODO удалить
     @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Schedule> schedules = new ArrayList<>();
+    private List<TrainScheduleDates> trainScheduleDates = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRAIN_ID")
-    private TrainRoute trainRoute;
+    public Train(String trainname, String trainCode, int trainSeats) {
+        this.trainname = trainname;
+        this.trainCode = trainCode;
+        this.trainSeats = trainSeats;
+    }
+
+    public Train() {
+    }
 
     public int getIdTrain() {
         return idTrain;
@@ -76,12 +79,33 @@ public class Train implements Serializable {
         this.trainSeats = trainSeats;
     }
 
-    public List<Schedule> getSchedules() {
-        return schedules;
+    public List<TrainScheduleDates> getTrainScheduleDates() {
+        return trainScheduleDates;
     }
 
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
+    public void setTrainScheduleDates(List<TrainScheduleDates> trainScheduleDates) {
+        this.trainScheduleDates = trainScheduleDates;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Train)) {
+            return false;
+        }
+
+        Train train = (Train) o;
+
+        return train.getIdTrain()==getIdTrain();
+    }
+
+    //Idea from effective Java : Item 9
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + getIdTrain();
+        return result;
     }
 
     @Override

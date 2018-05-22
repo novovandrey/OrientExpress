@@ -1,20 +1,29 @@
 package ru.novand.OrientExpress.domain.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "TRAINROUTE")
-@NamedQuery(name = "TrainRoute.findAll", query = "FROM TrainRoute")
+@NamedQueries({
+        @NamedQuery(name = "TrainRoute.findAll", query = "FROM TrainRoute"),
+        @NamedQuery(name = "TrainRoute.find", query = "FROM TrainRoute where idTrainRoute = :trainRouteID"),
+        @NamedQuery(name = "TrainRoute.findByTrainCode", query = "FROM TrainRoute where train.trainCode = :traincode")
+})
 public class TrainRoute implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRAINROUTE_ID")
-    private int idtrainroute;
+    private int idTrainRoute;
 
-    @OneToOne(mappedBy = "trainRoute", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
+    @JoinColumn(name = "TRAIN_ID")
     private Train train;
 
     @ManyToOne
@@ -25,28 +34,26 @@ public class TrainRoute implements Serializable {
     @JoinColumn(name = "TOSTATION")
     private Station departurestation;
 
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Schedule> scheduleList = new ArrayList<>();
+
+    public TrainRoute() {
+    }
+
+    public int getIdTrainRoute() {
+        return idTrainRoute;
+    }
+
+    public void setIdTrainRoute(int idTrainRoute) {
+        this.idTrainRoute = idTrainRoute;
+    }
+
     public Train getTrain() {
         return train;
     }
 
     public void setTrain(Train train) {
         this.train = train;
-    }
-
-    public int getIdtrainschedule() {
-        return idtrainroute;
-    }
-
-    public void setIdtrainschedule(int idtrainroute) {
-        this.idtrainroute = idtrainroute;
-    }
-
-    public int getIdtrainroute() {
-        return idtrainroute;
-    }
-
-    public void setIdtrainroute(int idtrainroute) {
-        this.idtrainroute = idtrainroute;
     }
 
     public Station getArrivalstation() {
@@ -63,5 +70,21 @@ public class TrainRoute implements Serializable {
 
     public void setDeparturestation(Station departurestation) {
         this.departurestation = departurestation;
+    }
+
+    public List<Schedule> getScheduleList() {
+        return scheduleList;
+    }
+
+    public void setScheduleList(List<Schedule> scheduleList) {
+        this.scheduleList = scheduleList;
+    }
+
+    @Override
+    public String toString() {
+        return "TrainRoute{" +
+                "idTrainRoute=" + idTrainRoute +
+                ", train='" + train + '\'' +
+                '}';
     }
 }

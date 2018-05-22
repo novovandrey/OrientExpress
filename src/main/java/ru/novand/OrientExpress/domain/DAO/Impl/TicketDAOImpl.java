@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Repository("ticketDao")
+@Repository("ticketDAO")
 public class TicketDAOImpl implements TicketDAO {
 
     @PersistenceContext
@@ -79,7 +79,7 @@ public class TicketDAOImpl implements TicketDAO {
     @Override
     public List<Passenger> GetAllPassengersByTrain(String trainCode, Date departuredate) {
 
-        List<Passenger> passengers = new ArrayList<Passenger>();
+        List<Passenger> passengers = new ArrayList<>();
 
         TypedQuery<Ticket> query = manager.createNamedQuery("Ticket.findTicketsByTrainCode", Ticket.class);
         query.setParameter("trainCode", trainCode);
@@ -90,6 +90,16 @@ public class TicketDAOImpl implements TicketDAO {
             passengers.add(ticket.getPassenger());
         }
         return passengers;
+    }
+
+    @Override
+    public List<Ticket> getTicketByPassengerID(int passengerId) {
+
+        String query = "from Ticket where passenger.idpassenger = :passengerId";
+        Query q = manager.createQuery(query);
+        q.setParameter("passengerId", passengerId);
+
+        return q.getResultList();
     }
 
 }

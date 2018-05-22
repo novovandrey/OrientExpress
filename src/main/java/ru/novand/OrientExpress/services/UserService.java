@@ -1,13 +1,27 @@
 package ru.novand.OrientExpress.services;
 
-//@Service
-//public class UserService implements IUserService {
-//    @PersistenceContext
-//    private EntityManager entityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.novand.OrientExpress.domain.DAO.interfaces.UserDAO;
+import ru.novand.OrientExpress.domain.entities.User;
+import ru.novand.OrientExpress.exception.CustomSQLException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Date;
+
+@Service
+public class UserService {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private UserDAO userDAO;
+
 //
 //    @Transactional
 //    @Override
-//    public User registerNewUserAccount(UserDto accountDto)
+//    public User registerNewUserAccount(UserDTO accountDto)
 //            throws EmailExistsException {
 //
 //        if (emailExist(accountDto.getEmail())) {
@@ -29,4 +43,9 @@ package ru.novand.OrientExpress.services;
 //        }
 //        return false;
 //    }
-//}
+public User getUserIDByName(String username) throws CustomSQLException {
+    User user = new User();
+    User result = userDAO.findByName(username);
+    return result;
+}
+}

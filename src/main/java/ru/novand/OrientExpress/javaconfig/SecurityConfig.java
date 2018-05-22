@@ -3,6 +3,7 @@ package ru.novand.OrientExpress.javaconfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -30,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //TODO add and configure user permissions
+        //TOFO add login success handler
         http.authorizeRequests()
 //                .anyRequest().authenticated() //all requests will checked
                 .and()
@@ -39,10 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                //.antMatchers("/schedule.html/**").hasRole("ADMIN")
+                .antMatchers("/addstation_emp.html/**").hasRole("ADMIN")
+                .antMatchers("/addstation_emp/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/passengerList.html/**").hasRole("ADMIN")
+                .antMatchers("/passengerList/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/trains.html/**").hasRole("ADMIN")
+                .antMatchers("/trains/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/user/**").hasRole("USER")
-                //.antMatchers("/schedule/**").access("hasRole('ROLE_ADMIN')")
-                .and().formLogin().defaultSuccessUrl("/", false)// if success auth redirect to prev page
+                .and().formLogin().defaultSuccessUrl("/default", false)// if success auth redirect to prev page
                 .and()
                 .logout().logoutUrl("/j_spring_security_logout").logoutSuccessUrl("/")
                 .and()

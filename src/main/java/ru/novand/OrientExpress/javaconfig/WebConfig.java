@@ -28,7 +28,6 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         //Create the dispatcher servlet's Spring application context
-        //может убрать??
         AnnotationConfigWebApplicationContext servletAppContext = new AnnotationConfigWebApplicationContext();
         servletAppContext.register(MVCConfig.class);
 

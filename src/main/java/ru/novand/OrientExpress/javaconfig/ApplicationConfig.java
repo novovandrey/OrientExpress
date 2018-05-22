@@ -3,7 +3,6 @@ package ru.novand.OrientExpress.javaconfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -18,7 +17,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManagerFactory;
@@ -149,6 +147,8 @@ public class ApplicationConfig {
         jpaProperties.put("hibernate.show_sql",true);
         jpaProperties.put("hibernate.use_sql_comments",true);
         jpaProperties.put("hibernate.format_sql","true");
+        jpaProperties.put("hibernate.enable_lazy_load_no_trans","true");
+
 //        jpaProperties.put("hibernate.hbm2ddl.auto","validate");
 
         return jpaProperties;

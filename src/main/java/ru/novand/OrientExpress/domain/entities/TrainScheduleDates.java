@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -22,7 +23,7 @@ public class TrainScheduleDates implements Serializable{
 
     @NotEmpty
     @Column(name = "DEPARTUREDATE")
-    private Date departuredate;
+    private LocalDate departuredate;
 
     public int getIdtrainschedule() {
         return idtrainschedule;
@@ -40,11 +41,11 @@ public class TrainScheduleDates implements Serializable{
         this.train = train;
     }
 
-    public Date getDeparturedate() {
+    public LocalDate getDeparturedate() {
         return departuredate;
     }
 
-    public void setDeparturedate(Date departuredate) {
+    public void setDeparturedate(LocalDate departuredate) {
         this.departuredate = departuredate;
     }
 

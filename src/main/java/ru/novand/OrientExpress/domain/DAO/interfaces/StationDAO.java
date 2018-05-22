@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface StationDAO extends GenDAO<Station> {
 
-    public List<Schedule> getTrains(String stationName);//trains arriving at the station arrival_station_id
-
     public Station getStation(String name);
 
 }
