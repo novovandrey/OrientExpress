@@ -19,7 +19,7 @@
             </nav>
 
             <div class="card-panel">
-                <h2>404 </br> Page not found  </h2>
+                <h2>404</br>Page not found</h2>
             </div>
         </div>
 
