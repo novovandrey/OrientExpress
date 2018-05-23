@@ -168,8 +168,8 @@ public class TicketController {
         logger.error("Exception Raised="+ex);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("route", ex);
-        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.addObject("route", "This route is not exist");
+        modelAndView.addObject("url", "This route is not exist");
         modelAndView.setViewName("error");
 
         return modelAndView;

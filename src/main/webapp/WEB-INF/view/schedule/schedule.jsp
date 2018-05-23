@@ -40,7 +40,10 @@
                         <label class="active" for="fromSt"><spring:message code="from" text="from"/></label>
 
                         <%--<span class="helper-text" data-error="wrong" data-success="right"></span>--%>
+
                     </div>
+                    <div class="input-field col s1 m1"><button id="switchbtn" class="switchbtn" type="button" style="background:url('resources/images/switch.svg');"></button></div>
+
                     <div class="input-field col s12 m4">
 
                         <input path="stationsResult" class="validate" title="Enter station" list="stationsResult" id="toSt" name="toSt" type="text" required/>
@@ -56,7 +59,7 @@
                     </div>
                 <%--</div>--%>
                 <%--<div class="row">--%>
-                    <div class="input-field col s12 m4">
+                    <div class="input-field col s12 m3">
                         <%--<label for="departuredate">Date</label>--%>
                         <input required="required" name="departuredate" value="${curDate}" type="text" class="datepicker">
                     </div>
@@ -78,6 +81,8 @@
 
         <spring:url value="/resources/js/schedule.js" var="schedulejs"/>
         <script src="${schedulejs}"></script>
+
+
     </jsp:body>
 </page:template>
 

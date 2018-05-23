@@ -18,7 +18,7 @@
                 <tr class="resultRow">
                     <td class="firstname">${res.firstname}</td>
                     <td class="familyname">${res.familyname}</td>
-                    <td class="birthdate"><fmt:formatDate value="${res.birthdate}" pattern="dd.MM.yyyy"/></td>
+                    <td class="birthdate">${res.birthdate}</td>
                 </tr>
             </c:forEach>
             </tbody>

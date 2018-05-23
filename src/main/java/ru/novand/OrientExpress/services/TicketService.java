@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TicketDAO;
 import ru.novand.OrientExpress.domain.DAO.interfaces.TrainDAO;
-import ru.novand.OrientExpress.domain.dto.ScheduleDTO;
 import ru.novand.OrientExpress.domain.entities.Passenger;
 import ru.novand.OrientExpress.domain.entities.Ticket;
 import ru.novand.OrientExpress.exception.CustomSQLException;
@@ -46,14 +45,14 @@ public class TicketService {
     }
 
     public boolean isPassengerAlreadyRegistered(int trainCode, Date depdateFormat, Passenger passenger) {
-        List<Passenger> passengerList = ticketDAO.GetAllPassengersByTrain(String.valueOf(trainCode),depdateFormat);
+        List<Passenger> passengerList = ticketDAO.getAllPassengersByTrain(String.valueOf(trainCode),depdateFormat);
         return passengerList.contains(passenger);
     }
 
 
     public List<Passenger> getAllPassengers(String trainCode, Date depdate) throws CustomSQLException {
 
-        return ticketDAO.GetAllPassengersByTrain (trainCode,depdate);
+        return ticketDAO.getAllPassengersByTrain(trainCode,depdate);
     }
 
     public List<Ticket> getTicketByPassengerID(int passengerId) throws CustomSQLException {

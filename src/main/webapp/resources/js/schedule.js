@@ -3,12 +3,22 @@ $(function() {
     M.updateTextFields();
     var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
 
+    $( "#switchbtn" ).click(function( ) {
+        if(document.querySelector('input[name="fromSt"]').validity.valid&&
+            document.querySelector('input[name="toSt"]').validity.valid &&
+            document.querySelector('input[name="departuredate"]').validity.valid) {
+            var swap = $('input[name="fromSt"]').val();
+            $('input[name="fromSt"]').val($('input[name="toSt"]').val());
+            $('input[name="toSt"]').val(swap);
+        }
+
+    })
     $('#tableResult').hide(1);
     $('#tableResultDetail').hide(1);
     $( "#getSchedule" ).click(function( ) {
         $('#tableResult').hide(1);
         $('#tableResultDetail').hide(1);
-        if ($( 'input[name="fromSt"]').val()===$( 'input[name="toSt"]').val()){
+        if ((document.querySelector('input[name="fromSt"]').validity.valid&&document.querySelector('input[name="toSt"]').validity.valid)&&($( 'input[name="fromSt"]').val()===$( 'input[name="toSt"]').val())){
             alert("Station from and station to is the same")
             return false;
         }
@@ -50,6 +60,7 @@ $(function() {
             success:function(data) {
                 $('#tableResultDetail').html( data );
                 $('#tableResultDetail').show("slow","swing");
+                $('#tableResultDetail').css({height:$('#tableResult').height()});
             }
         });
     });

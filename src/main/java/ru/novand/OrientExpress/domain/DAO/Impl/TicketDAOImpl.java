@@ -77,7 +77,7 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
-    public List<Passenger> GetAllPassengersByTrain(String trainCode, Date departuredate) {
+    public List<Passenger> getAllPassengersByTrain(String trainCode, Date departuredate) {
 
         List<Passenger> passengers = new ArrayList<>();
 

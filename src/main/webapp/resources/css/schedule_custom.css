@@ -31,3 +31,10 @@
 #Pay{
 	margin-bottom: 1vw;
 }
+
+
+.switchbtn{
+	border: none;
+	height: 2.1875rem;
+	width: 2.1875rem;
+}

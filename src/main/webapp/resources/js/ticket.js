@@ -1,5 +1,7 @@
 $(function() {
 
+    $('#leftColumn').css({height:$('#rightColumn').height()});
+
     M.updateTextFields();
     var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
 

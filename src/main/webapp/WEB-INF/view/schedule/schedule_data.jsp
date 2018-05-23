@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<div class="card-panel"  >
+<div class="card-panel equalH eq" >
     <c:if test="${!empty results}">
         <%--<input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Search in table" />--%>
         <%--<table id="page-size-example" class="footable table table-stripped" data-page-size="" data-filter=#filter data-sorting="true">--%>
@@ -37,6 +37,6 @@
         </table>
     </c:if>
     <c:if test="${empty results}">
-        <div class="card-panel grey lighten-2"><spring:message code="no_train_in_date" text="no_train_in_date"/></div>
+        <spring:message code="no_train_in_date" text="no_train_in_date"/>
     </c:if>
 </div>

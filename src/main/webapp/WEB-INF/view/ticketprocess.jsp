@@ -20,9 +20,9 @@
                 </nav>
             <div class="card-panel row">
 
-                <div class="col s9" id="leftColumn">
+                <div class="col s8 m8 card-panel" id="leftColumn">
                     <div class="well"><spring:message code="personal_info" text="personal_info"/></div>
-                    <form name="ticket" id="ticket" class="col s12 card-panel">
+                    <form name="ticket" id="ticket" class="col s12 ">
                         <div class="row">
                             <div class="input-field col s6 pull-left">
                                 <label class="active" for="FamilyName"><spring:message code="family_name" text="family_name"/></label>
@@ -36,8 +36,9 @@
                         <div class="row">
                             <div class="col s3 pull-left">
                                 <%--<label for="BirthDate">BirthDate</label>--%>
+                                <label class="active" for="BirthDate"><spring:message code="birthdate" text="birthdate"/></label>
                                 <%--<input class="validate"  id="BirthDate" name="BirthDate" title="BirthDate" type="date" required="required" placeholder="BirthDate"/>--%>
-                                <input required="required" name="BirthDate" type="text" class="datepicker">
+                                <input required="required" id="BirthDate" name="BirthDate" type="text" class="datepicker">
                             </div>
                         </div><!--/form-group-->
                         <%--<div class="row">--%>
@@ -51,10 +52,10 @@
                         </div>
                     </form>
                 </div>
-
-                <div class="col s3" id="rightColumn">
+                <div class="col s1 m1"></div>
+                <div class="col s3 m3 card-panel" id="rightColumn" >
                     <div class="well"><spring:message code="route_info" text="route_info"/></div>
-                    <form name="routeInfo" id="routeInfo" class="card-panel" >
+                    <form name="routeInfo" id="routeInfo" >
                         <div class="form-group">
                             <input class="traincode" value="${traincode}" name="traincode" hidden/>
                             <div class="col-sm-12 no-margin pull-left">
