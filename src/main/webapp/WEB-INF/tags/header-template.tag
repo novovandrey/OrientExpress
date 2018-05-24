@@ -23,7 +23,13 @@
             </c:if>
             <c:if test="${isUSer}">
                 <li>
-                    <a href="<c:url value="/userlk.html"/>"><security:authentication property="principal.username"/></a>
+                <security:authorize access="!hasAnyRole('ROLE_ADMIN')">
+                    <c:url value="/userlk.html" var="linkTolk" />
+                </security:authorize>
+                    <security:authorize access="hasAnyRole('ROLE_ADMIN')">
+                        <c:url value="" var="linkTolk" />
+                    </security:authorize>
+                    <a href="<c:url value="${linkTolk}"/>"><security:authentication property="principal.username"/></a>
                     <%--<security:authentication property="principal.authorities"/>--%>
                 </li>
             </c:if>

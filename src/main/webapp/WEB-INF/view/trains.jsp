@@ -8,19 +8,12 @@
 <page:template>
     <jsp:body>
         <!-- Page Content -->
-        <div class="container">
+        <div class="container margintop100">
 
         <%--Not used draft func--%>
 
         <!-- Page Heading/Breadcrumbs -->
-        <nav class="dot">
-            <div class="nav-wrapper">
-                <div class="col s12">
-                    <a href="index.html" class="breadcrumb">Home</a>
-                    <a href="/trains" class="breadcrumb">Train info</a>
-                </div>
-            </div>
-        </nav>
+
         <%--<form name="passengers" id="passengers" class="col s12 card-panel">--%>
 
             <%--<div class="row">--%>

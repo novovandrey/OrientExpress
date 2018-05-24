@@ -8,23 +8,17 @@
 <page:template>
     <jsp:body>
         <!-- Page Content -->
-        <div class="container">
+        <div class="container margintop50">
 
         <!-- Page Heading/Breadcrumbs -->
-        <nav class="dot">
-            <div class="nav-wrapper">
-                <div class="col s12">
-                    <a href="index.html" class="breadcrumb">Home</a>
-                    <a href="/passengerList" class="breadcrumb">Passengers on the train</a>
-                </div>
-            </div>
-        </nav>
+
+        <div class="well"><h3><spring:message code="show_passenger_header" text="show_passenger_header"/></h3></div>
         <form name="passengers" id="passengers" class="col s12 card-panel">
 
-            <div class="row">
+            <div class="row ">
                 <div class="input-field col s6">
                     <label for="traincode">Train code</label>
-                    <input path="trains" class="validate" title="Enter code" list="trains"  placeholder="Code" id="traincode" name="traincode" type="text" required autofocus/>
+                    <input path="trains" class="validate" title="Enter code" list="trains"  id="traincode" name="traincode" type="text" required autofocus/>
                     <c:if test = "${not empty trains}">
                         <datalist id="trains">
                             <c:forEach var="train" items="${trains}">
@@ -37,7 +31,6 @@
                 <div class="input-field col s6">
                     <label for="arrivaldate">Date</label>
                     <input id="arrivaldate" name="arrivaldate" class="validate" title="Enter date" value="${curDate}" type="date" required="required" placeholder="Date"/>
-                    <span class="helper-text" data-error="wrong" data-success="right"></span>
                 </div>
             </div>
             <div class="col-sm">

@@ -4,12 +4,20 @@
 }
 
 .borderpx {
-	border: 1px solid #e0e0e0 !important;
-	border-radius: 2px !important;
+	border: 2px solid #4994e3 !important;
+	border-radius: 2px;
 }
 
 .margintop100 {
-	margin-top: 100px;
+	 margin-top: 100px;
+ }
+
+.margintop50 {
+	margin-top: 50px;
+}
+
+.margintop25 {
+	margin-top: 25px;
 }
 
 .backpicture {
