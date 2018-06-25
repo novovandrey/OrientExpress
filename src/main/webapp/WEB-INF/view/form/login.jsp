@@ -56,18 +56,11 @@
                     <%--</label>--%>
                 <%--</div>--%>
                 <button type="submit" class="btn waves-effect waves-light" >Login</button>
-                <br/><br/>
+                <br/>
+                <a href="/registration">Registration</a>
+                <br/>
                 <a href="javascript:history.back()">Back</a>
 
-                <br /><br />
-                <p> Available roles:</p>
-
-                <b>ROLE_SUPER_USER</b><br />
-                Login:<span style="color: royalblue">superuser@outlook.com</span> Password: <span style="color: royalblue">12345</span> <br />
-                <b>ROLE_ADMIN</b> <br />
-                Login:<span style="color: royalblue">admin@gmail.com</span> Password: <span style="color: royalblue">12345</span> <br />
-                <b>ROLE_USER</b> <br />
-                Login: <span style="color: royalblue">roleuser@outlook.com</span> Password: <span style="color: royalblue">12345</span>
             </div>
         </form>
     </div>

@@ -12,6 +12,6 @@ public interface UserDAO {
     public User delete(User entity);
     public User update(User entity);
     public User findById(int id);
-    public User findByName(String name);
+    public User findByUsername(String name);
 
 }

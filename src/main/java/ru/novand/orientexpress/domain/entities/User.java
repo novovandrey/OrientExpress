@@ -1,49 +1,57 @@
 package ru.novand.orientexpress.domain.entities;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "USER")
-@NamedQuery(name = "User.findByName", query = "FROM User where username= :username")
-public class User {
+@NamedQuery(name = "User.findByUsername", query = "FROM User where username= :username")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
-    private int idUser;
+    private Long user_id;
 
-    @NotEmpty
-    @Size(min = 5, max = 20)
-    @Column(name = "USERNAME")
     private String username;
-
-    @NotEmpty
-    @Size(min=5, max=20)
-    @Column(name="PASSWORD")
     private String password;
+    private String passwordConfirm;
 
-    @NotEmpty
-    @Size(min=0, max=100)
-    @Column(name="EMAIL")
     private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Column(name="ENABLED")
     private boolean enabled;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Passenger> passengerlist = new ArrayList<>();
+    public User() {}
 
-    public int getIdUser() {
-        return idUser;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -62,22 +70,33 @@ public class User {
         this.password = password;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    @Transient
+    public String getPasswordConfirm() {
+        return passwordConfirm;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
-    public String getEmail() {
-        return email;
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "user_role",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Passenger> passengerlist = new ArrayList<>();
     public List<Passenger> getPassengerlist() {
         return passengerlist;
     }
@@ -88,11 +107,15 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "idUser=" + idUser +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                '}';
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("username='").append(username).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", passwordConfirm='").append(passwordConfirm).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", enabled=").append(enabled);
+        sb.append(", roles=").append(roles);
+        sb.append(", passengerlist=").append(passengerlist);
+        sb.append('}');
+        return sb.toString();
     }
 }

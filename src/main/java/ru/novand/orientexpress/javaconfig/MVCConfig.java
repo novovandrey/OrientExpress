@@ -1,12 +1,16 @@
 package ru.novand.orientexpress.javaconfig;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -26,7 +30,7 @@ import java.util.Locale;
 @Configuration
 //@ComponentScan(basePackages = {"ru.novand.orientexpress.domain.entities"}) //<context:component-scan base-package=''>
 //@ComponentScan({"ru.novand.orientexpress.domain.entities","ru.novand.orientexpress.domain.DAO","ru.novand.orientexpress.controllers","ru.novand.orientexpress.services"})
-@ComponentScan({"ru.novand.orientexpress.domain.pdf", "ru.novand.orientexpress.domain.DAO", "ru.novand.orientexpress.controllers", "ru.novand.orientexpress.services"})
+@ComponentScan({"ru.novand.orientexpress.model","ru.novand.orientexpress.mappers","ru.novand.orientexpress.domain.pdf", "ru.novand.orientexpress.domain.DAO", "ru.novand.orientexpress.controllers", "ru.novand.orientexpress.services.impl", "ru.novand.orientexpress.services.interfaces"})
 @EnableTransactionManagement  // inclide TransactionManager for management transaction database ;
 public class MVCConfig extends WebMvcConfigurerAdapter {
 
@@ -69,10 +73,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         super.addViewControllers(registry);
 
         registry.addViewController("/schedule.html").setViewName("/schedule/schedule");
+        registry.addViewController("/userForm.html").setViewName("/userForm");
         registry.addViewController("/paygate.html").setViewName("/paygate");
         //registry.addViewController("/schedule_data.html").setViewName("/schedule/schedule_data");
         registry.addViewController("/").setViewName("/index");
         registry.addViewController("/index.html").setViewName("/index");
+//        registry.addViewController("/login.html").setViewName("/form/login");
         registry.addViewController("/login.html").setViewName("/form/login");
         registry.addViewController("/stattionschedule.html").setViewName("/stattionschedule");
         registry.addViewController("/addstation_emp.html").setViewName("/addstation_emp");
@@ -80,6 +86,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/trains.html").setViewName("/trains");
         registry.addViewController("/pdf.html").setViewName("/pdf");
         registry.addViewController("/userlk.html").setViewName("/userlk");
+        registry.addViewController("/registration.html").setViewName("/form/registration");
         registry.addViewController("/trainRouteList.html").setViewName("/trainRouteList");
     }
 
@@ -126,4 +133,19 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+        source.setBasename("messages");
+        return source;
+    }
+
+    @Override
+    public Validator getValidator() {
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(messageSource());
+        return validator;
+    }
+
 }
