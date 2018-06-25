@@ -27,3 +27,7 @@
 -# Editor-based Rest Client
 -.idea/httpRequests
 .idea/
+
+# Maven
+log/
+target/
