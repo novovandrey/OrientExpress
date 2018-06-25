@@ -3,6 +3,10 @@ $(function() {
     M.updateTextFields();
     var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
 
+    $( ".datepicker-day-button" ).click(function( ) {
+        $( ".datepicker-done" ).click();
+    });
+
     $( "#switchbtn" ).click(function( ) {
         if(document.querySelector('input[name="fromSt"]').validity.valid&&
             document.querySelector('input[name="toSt"]').validity.valid &&

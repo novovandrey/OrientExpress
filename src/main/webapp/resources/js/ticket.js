@@ -5,6 +5,15 @@ $(function() {
     M.updateTextFields();
     var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
 
+    $("#button").click( function() {
+        $( ".datepicker-done" ).click();
+        alert("f");
+    });
+    //
+    // $('.datepicker').on('change', function(){
+    //     $(this).next().find('.datepicker-done').click();
+    // });
+
         $(document).on('click', '#Pay', function() {
 
         if(document.querySelector('input[name="FamilyName"]').validity.valid&&

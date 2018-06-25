@@ -1,9 +1,14 @@
 $(function() {
     $('.collapsible').collapsible();
     $('select').formSelect();
+    $('.tooltipped').tooltip();
 
     $('div[class^="div"]').on('click', function () {
         event.stopPropagation();
+    });
+
+    $('#btnTRNew').on('click', function () {
+        $('#float-btn').removeClass('grey').addClass('red');
     });
 
     $('div.fixed-action-btn').on('click', function () {
@@ -15,6 +20,7 @@ $(function() {
             success:function(data) {
                 $('#modal').html( data );
                 $('#modal').show("slow","swing");
+                $('#float-btn').removeClass('red').addClass('grey');
             }
         });
 
@@ -51,32 +57,32 @@ function doEditable(elementid) {
 
     var btn = "#btn"+elementid;
 
-    $('#trainroute tr').attr('contenteditable','false');
+    //$('#trainroute tr').attr('contenteditable','false');
+    $('.interval'+elementid).attr('contenteditable','false');
+    $('.interval'+elementid).removeClass('tooltipped');
     $('button[id^="btn"]').each(function() {
-        if('#'+this.id!==btn) $(this).addClass('disabled')
+        if('#'+this.id!==btn) $(this).addClass('disabled');
     });
 
     var el = "#row"+elementid;
     //$(el).attr('contenteditable','true');
 
-
-
     if($(btn).hasClass('disabled')) {
-        $(el).attr('contenteditable','true');
-        $('tr'+el + '> td').each(function() {
-            if (this.className=="fromst") $(this).addClass('borderpx');
-            if (this.className=="tost") $(this).addClass('borderpx');
-            if (this.className=="interval") $(this).addClass('borderpx');
-        });
+        $('.interval'+elementid).attr('contenteditable','true');
+        $('.interval'+elementid).addClass('tooltipped'+elementid);
+        $('.tooltipped'+elementid).tooltip();
+        $('.interval'+elementid).addClass('borderpx');
         $(btn).removeClass('disabled');
+        $('.interval'+elementid).focus();
     }
     else{
-        $(el).attr('contenteditable','false');
-        $('tr'+el + '> td').each(function() {
-            if (this.className=="fromst") $(this).removeClass('borderpx');
-            if (this.className=="tost") $(this).removeClass('borderpx');
-            if (this.className=="interval") $(this).removeClass('borderpx');
-        });
+        $('.interval'+elementid).attr('contenteditable','false');
+        var elem = document.querySelector('.tooltipped'+elementid);
+        var instance = M.Tooltip.getInstance(elem);
+        instance.destroy();
+        $('.interval'+elementid).removeClass('tooltipped'+elementid);
+        $('.interval'+elementid).removeClass('borderpx');
+
         $(btn).addClass('disabled');
     }
 }
@@ -103,9 +109,9 @@ function saveItem(elementid) {
         var link = "/schedule/"+elementid+"/save";
         var el = "#row"+elementid;
         var routeData={};
-       routeData["fromst"] = $(".fromst"+elementid).text()
-       routeData["tost"] = $(".tost"+elementid).text()
-       routeData["interval"] = $(".interval"+elementid).text()
+       routeData["fromst"] = $(".fromst"+elementid).text();
+       routeData["tost"] = $(".tost"+elementid).text();
+       routeData["interval"] = $(".interval"+elementid).text();
 
         datareq= JSON.stringify( routeData );
         $.ajax({
@@ -114,10 +120,14 @@ function saveItem(elementid) {
             url: "http://localhost:8080"+link,
             data: datareq,
             success:function(data) {
-                M.toast({html: 'Save row success!'})
-                $('#trainroute tr').attr('contenteditable','false');
+                M.toast({html: 'Save row success!'});
+                $('.interval'+elementid).attr('contenteditable','false');
+                var elem = document.querySelector('.tooltipped'+elementid);
+                var instance = M.Tooltip.getInstance(elem);
+                instance.destroy();
                 var btn = "#btn"+elementid;
                 $(btn).addClass('disabled');
+                $('.interval'+elementid).removeClass('borderpx');
             },
             error:function(data) {
                 alert("error");

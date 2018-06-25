@@ -10,15 +10,7 @@
         <script src="${ticketjs}"></script>
         <div class="containe1r">
 
-                <nav class="dot">
-                    <div class="nav-wrapper">
-                        <div class="col s12">
-                            <a href="index.html" class="breadcrumb">Home</a>
-                            <a href="/schedule" class="breadcrumb">Schedule</a>
-                        </div>
-                    </div>
-                </nav>
-            <div class="card-panel row">
+            <div class="card-panel row margintop100">
 
                 <div class="col s8 m8 card-panel" id="leftColumn">
                     <div class="well"><spring:message code="personal_info" text="personal_info"/></div>

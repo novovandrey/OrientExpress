@@ -70,7 +70,7 @@
 <headerTemplate:header-template/>
 
 <jsp:doBody/>
-
+<br><br><br><br><br><br><br><br><br>
 </body>
 
 </html>

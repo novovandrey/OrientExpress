@@ -11,22 +11,18 @@
         <spring:url value="/resources/js/employee.js" var="employeejs"/>
         <script src="${employeejs}"></script>
 
-        <div class="container">
-        <nav class="dot">
-            <div class="nav-wrapper">
-                <div class="col s12">
-                    <a href="index.html" class="breadcrumb">Home</a>
-                </div>
-            </div>
-        </nav>
 
+        <div class="container margintop50">
+
+        <div class="well"><h3><spring:message code="add_train_header" text="add_train_header"/></h3></div>
+
+        <div class="well margintop25"><spring:message code="add_station_info" text="add_station_info"/></div>
         <form name="station" id="station" class="col s12 card-panel">
 
             <div class="row">
                 <div class="input-field col s4">
                     <label for="stationname">Station Name</label>
                     <input class="validate" title="Enter station" placeholder="enter name" id="stationname" name="stationname" type="text" required type="search"/>
-                    <span class="helper-text" data-error="wrong" data-success="right"></span>
                 </div>
             </div>
             <div class="col-sm">
@@ -34,6 +30,8 @@
             </div>
         </form>
         <div id="stationResult"></div>
+
+        <div class="well margintop25"><spring:message code="add_train_info" text="add_train_info"/></div>
 
         <form name="train" id="train" class="col s12 card-panel">
 
@@ -45,12 +43,10 @@
                 <div class="input-field col s4">
                     <label for="traincode">Train Code</label>
                     <input class="validate" title="Enter code" placeholder="train code" id="traincode" name="traincode" type="text" required type="search"/>
-                    <span class="helper-text" data-error="wrong" data-success="right"></span>
                 </div>
                 <div class="input-field col s4">
                     <label for="seatsnumber">Seats Number</label>
                     <input class="validate" title="Enter seats" placeholder="seats number" id="seatsnumber" name="seatsnumber" type="text" required type="search"/>
-                    <span class="helper-text" data-error="wrong" data-success="right"></span>
                 </div>
             </div>
             <div class="col-sm">

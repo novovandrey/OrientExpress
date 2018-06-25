@@ -11,17 +11,9 @@
         <spring:url value="/resources/js/trainroute.js" var="trainroutejs"/>
         <script src="${trainroutejs}"></script>
 
-        <div class="container">
-        <nav class="dot">
-            <div class="nav-wrapper">
-                <div class="col s12">
-                    <a href="index.html" class="breadcrumb">Home</a>
-                </div>
-            </div>
-        </nav>
-        <br/><br/><br/>
-
-        <div class="row">
+        <div class="container margintop50">
+        <div class="well"><h3><spring:message code="add_route_header" text="add_route_header"/></h3></div>
+        <div class="row margintop50">
             <div class="col m2"><b>TrainCode</b></div>
             <div class="col m3"><b>From</b></div>
             <div class="col m3"><b>To</b></div>
@@ -41,7 +33,7 @@
                         <div contenteditable="false" class="div${trainRoute.train.trainCode} col m3" id="depst${trainRoute.train.trainCode}"><c:out value="${trainRoute.departurestation.stationname}"/></div>
                         <%--<td><button id="btnTR${trainRoute.idTrainRoute}" class="disabled waves-effect waves-light btn" onclick="saveItemTR(${trainRoute.idTrainRoute})">Save</button></td>--%>
                         <%--<td><button class="waves-effect waves-light btn" onclick="doEditableTR(${trainRoute.idTrainRoute})">Edit</button></td>--%>
-                        <td><button class="waves-effect waves-light btn red" onclick="deleteItemTR(${trainRoute.train.trainCode})"><i class="material-icons left">delete_forever</i></button></td>
+                        <td><button class="waves-effect waves-light btn red" onclick="deleteItemTR('${trainRoute.train.trainCode}')"><i class="material-icons left">delete_forever</i></button></td>
                         <div class="col m4"><i class="right material-icons secondary-content">menu</i></div>
                     </div>
                     <div id="headdetails${trainRoute.train.trainCode}" class="collapsible-body">
@@ -66,10 +58,10 @@
                                         </div>
                                     </c:if>
                                     <c:forEach var="schedule" items="${trainRoute.scheduleList}">
-                                    <tr contenteditable="false" id="row${schedule.schedule_id}">
+                                    <tr id="row${schedule.schedule_id}">
                                         <td class="fromst${schedule.schedule_id}"><c:out value="${schedule.arrivalstation.stationname}"/></td>
                                         <td class="tost${schedule.schedule_id}"><c:out value="${schedule.departurestation.stationname}"/></td>
-                                        <td class="interval${schedule.schedule_id}"><c:out value="${schedule.interval}"/></td>
+                                        <td contenteditable="false" data-tooltip="Time in minutes from init station" data-position="left" class="interval${schedule.schedule_id}"><c:out value="${schedule.interval}"/></td>
                                         <td ><button id="btn${schedule.schedule_id}" class="disabled waves-effect waves-light btn" onclick="saveItem(${schedule.schedule_id})">Save</button></td>
                                         <td><button class="waves-effect waves-light btn" onclick="doEditable(${schedule.schedule_id})">Edit</button></td>
                                         <td><button class="waves-effect waves-light btn" onclick="deleteItem(${schedule.schedule_id})">Delete</button></td>
@@ -82,7 +74,7 @@
 
             </c:forEach>
         </ul>
-        <div class="fixed-action-btn"><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a></div>
+        <div class="fixed-action-btn"><a id="float-btn" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a></div>
 
         <div id="modal"></div>
 
