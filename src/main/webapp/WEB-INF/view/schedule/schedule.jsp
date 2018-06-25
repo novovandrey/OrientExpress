@@ -4,12 +4,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="page" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <page:template>
 
     <jsp:body>
-
         <c:url value="/GetAllStations" var="scheduleGetAllStations" />
         <c:url value="/findSchedule" var="findSchedule" />
         <!-- Page Content -->
@@ -18,19 +16,15 @@
 
         <div class="container margintop100">
 
-            <%--<security:authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_USER', 'ROLE_USER')">--%>
-                <%--<p>Ссылка logout имеет атрибут  <span style="color: #0080c0;">/j_spring_security_logout</span>, который прописан в security-config.xml</p>--%>
-                <%--<span style="color: #568C00;"><security:authentication property="principal.username"/></span>--%>
-                <%--<a style="color: red;" href="<c:url value="/j_spring_security_logout"/>">Logout</a>--%>
-            <%--</security:authorize>--%>
-
             <form name="schedule" id="schedule" class="col s12 card-panel">
 
                 <div class="row">
                     <div class="input-field col s12 m4">
-                        <input path="stationsResult" class="validate" title="Enter station" list="stationsResult"  id="fromSt" name="fromSt" type="text" required autofocus/>
+
+                        <input path="stationsResult" class="validate" title="Enter station" list="stationsResultFromST"  id="fromSt" name="fromSt" type="text" required autofocus/>
+
                         <c:if test = "${not empty stationsResult}">
-                            <datalist id="stationsResult">
+                            <datalist id="stationsResultFromST">
                                 <c:forEach var="stationResult" items="${stationsResult}">
                                     <option value="${stationResult.stationname}"/>
                                 </c:forEach>
@@ -38,17 +32,14 @@
                         </c:if>
 
                         <label class="active" for="fromSt"><spring:message code="from" text="from"/></label>
-
-                        <%--<span class="helper-text" data-error="wrong" data-success="right"></span>--%>
-
                     </div>
                     <div class="input-field col s1 m1"><button id="switchbtn" class="switchbtn" type="button" style="background:url('resources/images/switch.svg');"></button></div>
 
                     <div class="input-field col s12 m4">
 
-                        <input path="stationsResult" class="validate" title="Enter station" list="stationsResult" id="toSt" name="toSt" type="text" required/>
+                        <input path="stationsResult" class="validate" title="Enter station" list="stationsResultToSt" id="toSt" name="toSt" type="text" required/>
                         <c:if test = "${not empty stationsResult}">
-                            <datalist id="stationsResult">
+                            <datalist id="stationsResultToSt">
                                 <c:forEach var="stationResult" items="${stationsResult}">
                                     <option value="${stationResult.stationname}"/>
                                 </c:forEach>

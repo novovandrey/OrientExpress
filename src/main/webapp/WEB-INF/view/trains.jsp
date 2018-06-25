@@ -10,37 +10,6 @@
         <!-- Page Content -->
         <div class="container margintop100">
 
-        <%--Not used draft func--%>
-
-        <!-- Page Heading/Breadcrumbs -->
-
-        <%--<form name="passengers" id="passengers" class="col s12 card-panel">--%>
-
-            <%--<div class="row">--%>
-                <%--<div class="input-field col s6">--%>
-                    <%--<label for="traincode">Train code</label>--%>
-                    <%--<input path="trains" class="validate" title="Enter code" list="trains"  placeholder="Code" id="traincode" name="traincode" type="text" required autofocus/>--%>
-                    <%--<c:if test = "${not empty trains}">--%>
-                        <%--<datalist id="trains">--%>
-                            <%--<c:forEach var="train" items="${trains}">--%>
-                                <%--<option value="${train.trainCode}"/>--%>
-                            <%--</c:forEach>--%>
-                        <%--</datalist>--%>
-                    <%--</c:if>--%>
-                    <%--<span class="helper-text" data-error="wrong" data-success="right"></span>--%>
-                <%--</div>--%>
-                <%--<div class="input-field col s6">--%>
-                    <%--<label for="arrivaldate">Date</label>--%>
-                    <%--<input id="arrivaldate" name="arrivaldate" class="validate" title="Enter date" value="${curDate}" type="date" required="required" placeholder="Date"/>--%>
-                    <%--<span class="helper-text" data-error="wrong" data-success="right"></span>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="col-sm">--%>
-                <%--<button type="button" class="btn waves-effect waves-light" id="getTrains">Search--%>
-                    <%--<i class="material-icons right">send</i></button>--%>
-            <%--</div>--%>
-        <%--</form>--%>
-
         <div class="card-panel">
             <c:if test="${!empty trains}">
                 <h3>Trains info</h3>

@@ -8,6 +8,8 @@ import ru.novand.orientexpress.domain.entities.Ticket;
 import ru.novand.orientexpress.exception.CustomSQLException;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +67,7 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
-    public int countTicketsOnTrain(String trainCode, Date departuredate) {
+    public int countTicketsOnTrain(String trainCode, Instant departuredate) {
         String query = "Select count(t) from Ticket t where t.trainCode = :trainCode and t.departuredate = :departuredate";
         Query q = manager.createQuery(query);
 
@@ -75,13 +77,13 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
-    public List<Passenger> getAllPassengersByTrain(String trainCode, Date departuredate) {
+    public List<Passenger> getAllPassengersByTrain(String trainCode, Instant departuredate) {
 
         List<Passenger> passengers = new ArrayList<>();
 
         TypedQuery<Ticket> query = manager.createNamedQuery("Ticket.findTicketsByTrainCode", Ticket.class);
         query.setParameter("trainCode", trainCode);
-        query.setParameter("departuredate", departuredate, TemporalType.DATE);
+        query.setParameter("departuredate", departuredate);
         List<Ticket> tickets = query.getResultList();
 
         for (Ticket ticket:tickets) {

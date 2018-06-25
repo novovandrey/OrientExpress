@@ -1,5 +1,7 @@
 package ru.novand.orientexpress.domain.entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -26,7 +28,7 @@ public class Train implements Serializable {
     @Column(name = "TRAINNAME")
     private String trainname;
 
-    @Size(min = 0, max = 255)
+    @Size(min = 0, max = 5, message = "{train.traincode.empty}")
     @Column(name = "TRAINCODE")
     private String trainCode;
 
@@ -108,9 +110,11 @@ public class Train implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "idTrain=" + idTrain +
-                ", trainname='" + trainname + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("Train{");
+        sb.append("trainname='").append(trainname).append('\'');
+        sb.append(", trainCode='").append(trainCode).append('\'');
+        sb.append(", trainSeats=").append(trainSeats);
+        sb.append('}');
+        return sb.toString();
     }
 }

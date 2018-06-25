@@ -37,7 +37,7 @@
                         <div class="col m4"><i class="right material-icons secondary-content">menu</i></div>
                     </div>
                     <div id="headdetails${trainRoute.train.trainCode}" class="collapsible-body">
-                            <table id="trainroute">
+                        <table id="trainroute${trainRoute.train.trainCode}">
                                 <thead>
                                 <tr>
                                     <th>Departure from</th>
@@ -69,6 +69,8 @@
                                     </c:forEach>
                                 </tbody>
                             </table>
+                        <div id="newItem${trainRoute.train.trainCode}"></div>
+                        <button id = "addItem${trainRoute.train.trainCode}" class="waves-effect waves-light btn" >Add</button>
                     </div>
                 </li>
 

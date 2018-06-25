@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <%@ taglib prefix="page" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <page:template>
 
     <jsp:body>
-        <spring:url value="/resources/js/employee.js" var="employeejs"/>
-        <script src="${employeejs}"></script>
+        <%--<spring:url value="/resources/js/employee.js" var="employeejs"/>--%>
+        <%--<script src="${employeejs}"></script>--%>
 
 
         <div class="container margintop50">
@@ -23,6 +25,13 @@
                 <div class="input-field col s4">
                     <label for="stationname">Station Name</label>
                     <input class="validate" title="Enter station" placeholder="enter name" id="stationname" name="stationname" type="text" required type="search"/>
+                    <c:if test = "${not empty trains}">
+                        <datalist id="trains">
+                            <c:forEach var="train" items="${trains}">
+                                <option value="${train.trainCode}"/>
+                            </c:forEach>
+                        </datalist>
+                    </c:if>
                 </div>
             </div>
             <div class="col-sm">
@@ -49,9 +58,9 @@
                     <input class="validate" title="Enter seats" placeholder="seats number" id="seatsnumber" name="seatsnumber" type="text" required type="search"/>
                 </div>
             </div>
-            <div class="col-sm">
-                <button type="button" class="btn waves-effect waves-light" id="addtrainBtn">Add</button>
-            </div>
+            <%--<div class="col-sm">--%>
+                <%--<button type="button" class="btn waves-effect waves-light" id="addtrainBtn">Add</button>--%>
+            <%--</div>--%>
         </form>
         <div id="trainResult"></div>
 

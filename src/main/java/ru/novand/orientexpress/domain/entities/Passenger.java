@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -13,7 +14,7 @@ import java.util.*;
 @Table(name = "PASSENGER")
 @NamedQueries({
         @NamedQuery(name = "Passenger.find", query = "FROM Passenger where idpassenger= :passengerid"),
-        @NamedQuery(name = "Passenger.findbyUserID", query = "FROM Passenger where user.idUser= :userid"),
+        @NamedQuery(name = "Passenger.findbyUserID", query = "FROM Passenger where user.user_id= :userid"),
         @NamedQuery(name = "Passenger.findbyUserName", query = "FROM Passenger where user.username= :username")
 })
 public class Passenger implements Serializable {
@@ -40,7 +41,7 @@ public class Passenger implements Serializable {
     @NotNull
     @Column(name = "BIRTHDATE")
     //todo instant
-    private LocalDate birthdate;
+    private Instant birthdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
@@ -75,11 +76,11 @@ public class Passenger implements Serializable {
         this.familyname = familyname;
     }
 
-    public LocalDate getBirthdate() {
+    public Instant getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
+    public void setBirthdate(Instant birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -99,7 +100,7 @@ public class Passenger implements Serializable {
         this.user = user;
     }
 
-    public Passenger(String firstname, String familyname, LocalDate birthdate) {
+    public Passenger(String firstname, String familyname, Instant birthdate) {
         this.firstname = firstname;
         this.familyname = familyname;
         this.birthdate = birthdate;
@@ -113,5 +114,21 @@ public class Passenger implements Serializable {
                 ", familyname='" + familyname +
                 ", birthdate='" + birthdate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Passenger passenger = (Passenger) o;
+        return Objects.equals(firstname, passenger.firstname) &&
+                Objects.equals(familyname, passenger.familyname) &&
+                Objects.equals(birthdate, passenger.birthdate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(firstname, familyname, birthdate);
     }
 }

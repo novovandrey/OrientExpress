@@ -9,19 +9,21 @@
 <%@attribute name="header" fragment="true" %>
 <html>
 <head>
-    <link rel="icon" href="/resources/images/Flat-Icons.com-Square-Train.ico">
+    <link rel="icon" href="/resources/images/National_Rail_logo.svg">
     <spring:url value="/resources/css/schedule_custom.css" var="schedule_custom" />
     <spring:url value="/resources/css/ticket.css" var="ticket" />
     <spring:url value="/resources/js/jquery-3.3.1.min.js" var="jqueryjs"/>
     <spring:url value="/resources/js/materialize.min.js" var="materializejs"/>
     <spring:url value="/resources/css/materialize.css" var="materializecss"/>
     <spring:url value="/resources/js/custom.js" var="customjs"/>
+    <spring:url value="/resources/js/sweetalert2.all.min.js" var="sweetalertjs"/>
     <script src="${jqueryjs}"></script>
+    <script src="${sweetalertjs}"></script>
     <!-- tablesorter plugin -->
     <script src="/resources/js/jquery.tablesorter.js"></script>
 
     <script src="/resources/js/jquery.tablesorter.pager.js"></script>
-    <title><jsp:invoke fragment="title"/></title>
+    <title>OrientExpress</title>
 
 
     <!-- Bootstrap Core Min CSS -->

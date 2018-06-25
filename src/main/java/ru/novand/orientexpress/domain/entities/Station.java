@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The persistent class. It store Station list in database.
@@ -83,9 +84,27 @@ public class Station implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "idStation=" + idStation +
-                ", stationname='" + stationname + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("Station{");
+        sb.append("idStation=").append(idStation);
+        sb.append(", stationname='").append(stationname).append('\'');
+        sb.append(", arrschedulelist=").append(arrschedulelist);
+        sb.append(", depschedulelist=").append(depschedulelist);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return idStation == station.idStation &&
+                Objects.equals(stationname, station.stationname);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(idStation, stationname);
     }
 }

@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ru.novand.orientexpress.domain.dto.OrderDTO;
 import ru.novand.orientexpress.domain.entities.Passenger;
 import ru.novand.orientexpress.domain.entities.Ticket;
-import ru.novand.orientexpress.services.PassengerService;
-import ru.novand.orientexpress.services.TicketService;
+import ru.novand.orientexpress.services.impl.PassengerServiceImpl;
+import ru.novand.orientexpress.services.impl.TicketServiceImpl;
+import ru.novand.orientexpress.utils.Routes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,23 +23,14 @@ import javax.servlet.http.HttpServletRequest;
 public class OrderController {
 
 	DateTimeFormatter ddMMyyyyformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	//TODO divide services OrderController
+	@Autowired
+    private PassengerServiceImpl passengerService;
 
 	@Autowired
-    private PassengerService passengerService;
+	private TicketServiceImpl ticketService;
 
-	@Autowired
-	private TicketService ticketService;
-
-	/**
-	 * Handle request to the default page
-	 */
-//	@RequestMapping(value = "/lk", method = RequestMethod.GET)
-//	public String viewPdf() {
-//		return "lk";
-//	}
-
-
-	@RequestMapping(value = "/downloadPDF", method = RequestMethod.GET)
+	@GetMapping (Routes.downloadPDF)
 	public ModelAndView downloadPDF(HttpServletRequest request) {
 
 		String username=request.getUserPrincipal().getName();
@@ -54,7 +45,7 @@ public class OrderController {
 		String depdate = formatter.format(ticket.getDeparturedate());
 
 		List<OrderDTO> listBooks = new ArrayList<>(1);
-		listBooks.add(new OrderDTO(passenger.getFamilyname(), passenger.getFirstname(), passenger.getBirthdate().format(ddMMyyyyformatter), ticket.getTrainCode(), depdate));
+		listBooks.add(new OrderDTO(passenger.getFamilyname(), passenger.getFirstname(), passenger.getBirthdate().toString(), ticket.getTrainCode(), depdate));
 
 		// return a view which will be resolved by an excel view resolver
 		return new ModelAndView("pdfView", "listBooks", listBooks);

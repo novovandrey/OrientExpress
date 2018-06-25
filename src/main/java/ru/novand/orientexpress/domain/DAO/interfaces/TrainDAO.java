@@ -4,7 +4,7 @@ import ru.novand.orientexpress.domain.entities.Train;
 
 import java.util.List;
 
-public interface TrainDAO {
+public interface TrainDAO  {
     public Train findByCode (String code);
     public Train save(Train entity);
 

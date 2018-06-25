@@ -1,5 +1,7 @@
 package ru.novand.orientexpress.domain.dto;
 
+import java.util.Objects;
+
 public class MapPointDTO {
 
     private double sortfield;
@@ -40,5 +42,19 @@ public class MapPointDTO {
         return lng;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MapPointDTO that = (MapPointDTO) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(lat, that.lat) &&
+                Objects.equals(lng, that.lng);
+    }
 
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, lat, lng);
+    }
 }

@@ -3,6 +3,8 @@ package ru.novand.orientexpress.domain.entities;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -33,10 +35,9 @@ public class Ticket implements Serializable {
     @Column(name = "TRAINCODE")
     private String trainCode;
 
-    @Temporal(TemporalType.DATE)
     @NotNull
     @Column(name = "DEPARTUREDATE")
-    private Date departuredate;
+    private Instant departuredate;
 
     public int getIdTicket() {
         return idTicket;
@@ -62,18 +63,18 @@ public class Ticket implements Serializable {
         this.trainCode = trainCode;
     }
 
-    public Date getDeparturedate() {
+    public Instant getDeparturedate() {
         return departuredate;
     }
 
-    public void setDeparturedate(Date departuredate) {
+    public void setDeparturedate(Instant departuredate) {
         this.departuredate = departuredate;
     }
 
     public Ticket() {
     }
 
-    public Ticket(Passenger passenger, String trainCode, Date departuredate) {
+    public Ticket(Passenger passenger, String trainCode, Instant departuredate) {
         this.passenger = passenger;
         this.trainCode = trainCode;
         this.departuredate = departuredate;

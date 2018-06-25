@@ -16,11 +16,28 @@ $(function() {
         if (existRowAdditive) return false;
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/initTrainroute",
+            url: "http://localhost:8081/initTrainroute",
             success:function(data) {
                 $('#modal').html( data );
                 $('#modal').show("slow","swing");
-                $('#float-btn').removeClass('red').addClass('grey');
+                // $('#float-btn').removeClass('red').addClass('grey');
+            }
+        });
+
+    });
+    $("button[id^=addItem]").on('click', function () {
+        var existTrainScheduleAdditive = $('#newItem').html();
+        if (existTrainScheduleAdditive) return false;
+        var traincode = $(this).attr('id');
+        traincode = traincode.replace("addItem", "");
+        var newItemdiv= '#newItem'+traincode;
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8081/initTrainSchedule/"+traincode,
+            success:function(data) {
+                $(newItemdiv).html( data );
+                $(newItemdiv).show("slow","swing");
+                // $('#float-btn').removeClass('red').addClass('grey');
             }
         });
 
@@ -30,7 +47,7 @@ $(function() {
 
 // $.ajax({
 //     type: "POST",
-//     url: "http://localhost:8080/trainroute/add",
+//     url: "http://localhost:8081/trainroute/add",
 //     success:function(data) {
 //         M.toast({html: 'Add row success!'})
 //         // var el = "#headrow"+elementid;
@@ -93,7 +110,7 @@ function deleteItem(elementid) {
         var trainData={};
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080"+link,
+            url: "http://localhost:8081"+link,
             success:function(data) {
                 M.toast({html: 'Delete row success!'})
                 var el = "#row"+elementid;
@@ -117,7 +134,7 @@ function saveItem(elementid) {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "http://localhost:8080"+link,
+            url: "http://localhost:8081"+link,
             data: datareq,
             success:function(data) {
                 M.toast({html: 'Save row success!'});
@@ -128,6 +145,40 @@ function saveItem(elementid) {
                 var btn = "#btn"+elementid;
                 $(btn).addClass('disabled');
                 $('.interval'+elementid).removeClass('borderpx');
+            },
+            error:function(data) {
+                alert("error");
+            }
+
+        });
+    }
+    return false;
+}
+
+
+function saveTrainScheduleItemNew() {
+    event.stopPropagation();
+    if (confirm("Are you sure?")) {
+        var datareq={};
+        datareq["arrst"] = $("#arrst_new").val();
+        datareq["depst"] = $("#depst_new").val();
+        datareq["interval"] = $("#timeInterval_new").val();
+        var traincodeNew = $("tr[id^=rowNew]").attr('id');
+        traincodeNew = traincodeNew.replace("rowNew","");
+        datareq["traincode"] = traincodeNew;
+        var tableID = "#trainroute"+traincodeNew;
+        var newItemdiv= '#newItem'+traincodeNew;
+        //return false;
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "http://localhost:8081/schedule/add",
+            data: datareq,
+            success:function(data) {
+                $(newItemdiv).html("");
+                $(tableID + ' > tbody:last-child').append(data);
+                //$( data ).appendTo( $( ".collapsible" ) );
+                M.toast({html: 'Save row success!'})
             },
             error:function(data) {
                 alert("error");
@@ -174,7 +225,7 @@ function deleteItemTR(elementid) {
         var trainData={};
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080"+link,
+            url: "http://localhost:8081"+link,
             success:function(data) {
                 M.toast({html: 'Delete row success!'})
                 var el = "#headrow"+elementid;
@@ -202,7 +253,7 @@ function saveItemTR(elementid) {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "http://localhost:8080"+link,
+            url: "http://localhost:8081"+link,
             data: datareq,
             success:function(data) {
                 M.toast({html: 'Save route success!'})
@@ -228,7 +279,7 @@ function saveItemTR(elementid) {
 }
 
 function saveItemNew() {
-    event.stopPropagation();
+    // event.stopPropagation();
     if (confirm("Are you sure?")) {
         var routeData={};
         routeData["traincode"] = $("#traincode_new").val();
@@ -238,13 +289,14 @@ function saveItemNew() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "http://localhost:8080/trainroute/add",
+            url: "http://localhost:8081/trainroute/add",
             data: datareq,
             success:function(data) {
                 $('#modal').html("");
                 //$( ".hoverable:last" ).append( data);
                 $( data ).appendTo( $( ".collapsible" ) );
                 M.toast({html: 'Save route success!'})
+                location.reload();
             },
             error:function(data) {
                 alert("error");

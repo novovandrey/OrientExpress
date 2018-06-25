@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "TRAINTARIFF")
+@NamedQueries({
+    @NamedQuery(name = "TrainTariff.findAll", query = "FROM TrainTariff"),
+    @NamedQuery(name = "TrainTariff.findByTrainCode", query = "FROM TrainTariff where train.trainCode = :traincode")
+})
 public class TrainTariff implements Serializable {
 
     @Id

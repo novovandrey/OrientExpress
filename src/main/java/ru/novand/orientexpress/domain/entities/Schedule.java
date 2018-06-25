@@ -5,24 +5,24 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "SCHEDULE")
 @NamedQueries({
         @NamedQuery(name = "Schedule.GetAllScheduleList", query = "FROM Schedule"),
         @NamedQuery(name = "Schedule.GetScheduleByID", query = "FROM Schedule where schedule_id = :schedule_id"),
-        @NamedQuery(name = "Schedule.GetAllTrainsByStName", query = "FROM Schedule where departurestation.stationname in (:stationName)")
+        @NamedQuery(name = "Schedule.GetAllTrainsByStName", query = "FROM Schedule where departurestation.stationname in (:stationName)"),
+        @NamedQuery(name = "Schedule.GetAllScheduleByTrainCode", query = "FROM Schedule where train.trainCode in (:trainCode)")
 })
 public class Schedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCHEDULE_ID")
     private int schedule_id;
 
-    @NotEmpty
     @Size(min = 0, max = 255)
     @Column(name = "SCHEDULENAME")
     private String schedulename;
@@ -42,8 +42,7 @@ public class Schedule implements Serializable {
     @Column(name = "INTERVAL_M")
     private int interval;
 
-    public Schedule() {
-    }
+    public Schedule() {}
 
     public int getSchedule_id() {
         return schedule_id;
@@ -93,11 +92,42 @@ public class Schedule implements Serializable {
         this.interval = interval;
     }
 
+    public Schedule(String schedulename, Train train, Station arrivalstation, Station departurestation, int interval) {
+        this.schedulename = schedulename;
+        this.train = train;
+        this.arrivalstation = arrivalstation;
+        this.departurestation = departurestation;
+        this.interval = interval;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Schedule schedule = (Schedule) o;
+        return interval == schedule.interval &&
+                Objects.equals(schedulename, schedule.schedulename) &&
+                Objects.equals(train, schedule.train) &&
+                Objects.equals(arrivalstation, schedule.arrivalstation) &&
+                Objects.equals(departurestation, schedule.departurestation);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(schedulename, train, arrivalstation, departurestation, interval);
+    }
+
     @Override
     public String toString() {
-        return "User{" +
-                "schedule_id=" + schedule_id +
-                ", schedulename='" + schedulename + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("Schedule{");
+        sb.append("schedule_id=").append(schedule_id);
+        sb.append(", schedulename='").append(schedulename).append('\'');
+        sb.append(", train=").append(train);
+        sb.append(", arrivalstation=").append(arrivalstation);
+        sb.append(", departurestation=").append(departurestation);
+        sb.append(", interval=").append(interval);
+        sb.append('}');
+        return sb.toString();
     }
 }

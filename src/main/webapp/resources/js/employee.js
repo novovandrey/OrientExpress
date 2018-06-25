@@ -7,7 +7,7 @@ $(function() {
             var datareq = $("#station :input").serialize();
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/addstation",
+                url: "http://localhost:8081/addstation",
                 data: datareq,
                 success:function(data) {
                     $('#stationResult').html( data );
@@ -34,7 +34,7 @@ $(function() {
             var datareq = $("#train :input").serialize();
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/addtrain",
+                url: "http://localhost:8081/addtrain",
                 data: datareq,
                 success:function(data) {
                     $('#trainResult').html( data );

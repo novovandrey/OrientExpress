@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TRAINSCHEDULEDATES")
@@ -49,5 +50,30 @@ public class TrainScheduleDates implements Serializable{
     }
 
     public TrainScheduleDates() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrainScheduleDates that = (TrainScheduleDates) o;
+        return Objects.equals(train, that.train) &&
+                Objects.equals(departuredate, that.departuredate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(train, departuredate);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("TrainScheduleDates{");
+        sb.append("idtrainschedule=").append(idtrainschedule);
+        sb.append(", train=").append(train);
+        sb.append(", departuredate=").append(departuredate);
+        sb.append('}');
+        return sb.toString();
     }
 }

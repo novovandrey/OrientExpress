@@ -2,6 +2,7 @@ package ru.novand.orientexpress.domain.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 public class ScheduleDTO {
 
@@ -12,36 +13,16 @@ public class ScheduleDTO {
     private String arrstationname;
     //todo camelCase
 
-    public int getIntegerIterator() {
-        return integerIterator;
-    }
-
-    public void setIntegerIterator(int integerIterator) {
-        this.integerIterator = integerIterator;
-    }
-
-    private int integerIterator;
-
     public BigDecimal getDoubleIterator() {
         return doubleIterator;
     }
 
     public void setDoubleIterator(BigDecimal doubleIterator) {
+
         this.doubleIterator = doubleIterator;
     }
 
     private BigDecimal doubleIterator;
-
-//    public Date getDuration() {
-//        return duration;
-//    }
-//
-//    public void setDuration(Date depdate,Date arrdate) {
-//        Period p = new Period(depdate, arrdate);
-//        int hours = p.getHours();
-//    }
-
-//    private Date duration;
 
     public String getTraincode() {
         return traincode;
@@ -83,6 +64,9 @@ public class ScheduleDTO {
         this.arrstationname = arrstationname;
     }
 
+    public ScheduleDTO() {
+    }
+
     public ScheduleDTO(String traincode, Date depdate, String depstationname, Date ardate, String arrstationname) {
         this.traincode = traincode;
         this.departuredate = depdate;
@@ -97,13 +81,13 @@ public class ScheduleDTO {
         this.depstationname = from;
         this.arrstationname = to;
     }
-
-    public ScheduleDTO(String traincode, String depstationname, String arrstationname, int iterator) {
-        this.traincode = traincode;
-        this.depstationname = depstationname;
-        this.arrstationname = arrstationname;
-        this.integerIterator = iterator;
-    }
+//
+//    public ScheduleDTO(String traincode, String depstationname, String arrstationname, int iterator) {
+//        this.traincode = traincode;
+//        this.depstationname = depstationname;
+//        this.arrstationname = arrstationname;
+//        this.integerIterator = iterator;
+//    }
 
     public ScheduleDTO(String traincode, String depstationname, String arrstationname, BigDecimal iterator) {
         this.traincode = traincode;
@@ -112,5 +96,33 @@ public class ScheduleDTO {
         this.doubleIterator = iterator;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScheduleDTO that = (ScheduleDTO) o;
+        return Objects.equals(traincode, that.traincode) &&
+                Objects.equals(departuredate, that.departuredate) &&
+                Objects.equals(depstationname, that.depstationname) &&
+                Objects.equals(arrivaldate, that.arrivaldate) &&
+                Objects.equals(arrstationname, that.arrstationname);
+    }
 
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(traincode, departuredate, depstationname, arrivaldate, arrstationname);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleDTO{" +
+                "traincode=" + traincode +
+                ", departuredate='" + departuredate +
+                ", depstationname='" + depstationname +
+                ", arrivaldate='" + arrivaldate +
+                ", arrstationname='" + arrstationname +
+                ", doubleIterator='" + doubleIterator +
+                '}';
+    }
 }

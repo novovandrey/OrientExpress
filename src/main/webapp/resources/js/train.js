@@ -7,7 +7,7 @@ $(function() {
             var datareq = $("#trains :input").serialize();
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/getAllPassengers",
+                url: "http://localhost:8081/getAllPassengers",
                 data: datareq,
                 success:function(data) {
                     $('#tableResult').html( data );

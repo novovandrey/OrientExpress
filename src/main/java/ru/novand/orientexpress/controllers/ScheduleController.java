@@ -1,13 +1,23 @@
 package ru.novand.orientexpress.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.novand.orientexpress.domain.dto.ScheduleDTO;
+import ru.novand.orientexpress.domain.dto.StationDTO;
+import ru.novand.orientexpress.domain.dto.TrainScheduleDTO;
+import ru.novand.orientexpress.domain.entities.Schedule;
 import ru.novand.orientexpress.domain.entities.Station;
-import ru.novand.orientexpress.services.ScheduleService;
+import ru.novand.orientexpress.mappers.StationMapper;
+import ru.novand.orientexpress.services.impl.ScheduleServiceImpl;
+import ru.novand.orientexpress.utils.MessageSender;
+import ru.novand.orientexpress.utils.Routes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,32 +32,39 @@ public class ScheduleController {
 
     private DateTimeFormatter ddMMyyyyformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final ScheduleServiceImpl scheduleService;
 
-    @RequestMapping(value = "/schedule", method= RequestMethod.GET)
+    private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
+
+    public ScheduleController(ScheduleServiceImpl scheduleService) {
+        this.scheduleService = scheduleService;
+    }
+
+    private StationMapper stationMapper;
+
+    @GetMapping(Routes.schedule)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView getAllStations() {
 
-        System.out.println("scheduleController GetAllStations is called");
+        logger.debug("scheduleController getAllStations is called");
 
         ModelAndView mv = new ModelAndView("/schedule/schedule");
 
         String curDate = LocalDate.now().format(ddMMyyyyformatter);
 
-        List<Station> stations = scheduleService.GetAllStations();
+        List<Station> stations = scheduleService.getAllStations();
         mv.addObject("stationsResult", stations);
         mv.addObject("curDate", curDate);
         return mv;
     }
 
-    @RequestMapping(value = "/findSchedule", method= RequestMethod.GET)
+    @GetMapping(Routes.findSchedule)
     @ResponseBody
     public ModelAndView findSchedule(@RequestParam String fromSt, @RequestParam String toSt, @RequestParam String departuredate,
                                  HttpServletRequest request, HttpServletResponse response) {
         //TODO modelattribute
         //TODO @valid add hibernate valid
-        System.out.println("scheduleController getSchedule is called");
+        logger.debug("scheduleController getSchedule is called");
         String departuretime = "10:00:00";
         List<ScheduleDTO> result = scheduleService.getSchedule(fromSt,toSt,departuredate);
         ModelAndView mv = new ModelAndView();
@@ -57,11 +74,10 @@ public class ScheduleController {
         return mv;
     }
 
-    @RequestMapping(value = "/scheduleDetail", method= RequestMethod.GET)
+    @GetMapping(Routes.scheduleDetail)
     @ResponseBody
     public ModelAndView scheduleDetail(@RequestParam String traincode, @RequestParam String departuredate,@RequestParam String fromSt,@RequestParam String toSt,HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("scheduleController scheduleDetail is called");
-        //todo
+        logger.debug("scheduleController scheduleDetail is called");
         ModelAndView mv = new ModelAndView();
 
         List<ScheduleDTO> tariff = scheduleService.getTrainTariff(traincode,departuredate);
@@ -88,30 +104,98 @@ public class ScheduleController {
         return mv;
     }
 
-    @RequestMapping(value = "/stationschedule", method= RequestMethod.GET)
+    @GetMapping(Routes.stationschedule)
     public ModelAndView initStationSchedule() {
 
-        System.out.println("scheduleController initStationSchedule is called");
-
+        logger.debug("scheduleController initStationSchedule is called");
         ModelAndView mv = new ModelAndView("/stationschedule");
 
-        List<Station> stations = scheduleService.GetAllStations();
+        List<Station> stations = scheduleService.getAllStations();
         String curDate = LocalDate.now().format(ddMMyyyyformatter);
         mv.addObject("stationsResult", stations);
         mv.addObject("curDate", curDate);
         return mv;
     }
 
-    @RequestMapping(value = "/stationscheduleData", method= RequestMethod.GET)
+    @GetMapping("/allstation")
+    @ResponseBody
+    public List<StationDTO> getAllStation() {
+        logger.debug("scheduleController webservice request. allstation is called");
+
+        List<Station> stations = scheduleService.getAllStations();
+
+        List<StationDTO> stationsDTO = new ArrayList<>();
+
+        for ( Station station : stations ) {
+            stationsDTO.add( stationMapper.INSTANCE.stationToStationDTO( station ) );
+        }
+
+        return stationsDTO;
+    }
+
+    @RequestMapping("/scheduledataWS")
+    @ResponseBody
+    public List<ScheduleDTO> getScheduledataWS() throws JsonProcessingException {
+
+        logger.debug("scheduleController getScheduledataWS is called");
+        String fromSt = "Moscow";
+        LocalDate today = LocalDate.now();
+        String arrivaldate = (today).format(ddMMyyyyformatter);
+
+        List<ScheduleDTO> result = scheduleService.getScheduleByStation(fromSt,arrivaldate);
+        logger.debug("scheduleController schedule dto list: "+result);
+        return result;
+    }
+
+    @GetMapping(Routes.stationscheduleData)
     public ModelAndView getStationscheduleData(@RequestParam String fromSt, @RequestParam String arrivaldate,
                                                HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("scheduleController getScheduleByStation is called");
+        logger.debug("scheduleController getScheduleByStation is called");
         List<ScheduleDTO> result = scheduleService.getScheduleByStation(fromSt,arrivaldate);
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/scheduleByStationData");
         mv.addObject("results", result);
 
         return mv;
+    }
+
+
+
+    @PostMapping(value = "/schedule/{id}/delete")
+    public String deleteSchedule(@PathVariable("id") int id,
+                                 final RedirectAttributes redirectAttributes) {
+
+        scheduleService.delete(id);
+
+        redirectAttributes.addFlashAttribute("msg", "schedule is deleted!");
+
+        return "trainRouteList";
+
+    }
+
+
+    @PostMapping(value = "/schedule/{id}/save")
+    public String saveSchedule(@RequestBody TrainScheduleDTO trainScheduleDTO, @PathVariable("id") int id,
+                               final RedirectAttributes redirectAttributes) {
+
+        scheduleService.update(trainScheduleDTO.getFromst(), trainScheduleDTO.getTost(), trainScheduleDTO.getInterval(),id);
+        redirectAttributes.addFlashAttribute("msg", "schedule is saved!");
+        return "trainRouteList";
+
+    }
+
+    @GetMapping(value = "/schedule/add")
+    public ModelAndView addSchedule(@RequestParam String arrst, @RequestParam String depst, @RequestParam String interval, @RequestParam String traincode, RedirectAttributes redirectAttributes) {
+        ModelAndView mv = new ModelAndView("schedule_row");
+
+        List<Schedule> scheduleNewList = new ArrayList<>();
+        scheduleNewList.add(scheduleService.save(arrst,depst,interval,traincode));
+
+        redirectAttributes.addFlashAttribute("msg", "schedule is added!");
+        mv.addObject("scheduleNewList", scheduleNewList);
+        MessageSender.sendMessage(1);
+        return mv;
+
     }
 
 }

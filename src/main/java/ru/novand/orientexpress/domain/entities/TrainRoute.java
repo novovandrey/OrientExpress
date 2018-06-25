@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TRAINROUTE")
@@ -35,7 +36,7 @@ public class TrainRoute implements Serializable {
     @JoinColumn(name = "TOSTATION")
     private Station departurestation;
 
-    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Schedule> scheduleList = new ArrayList<>();
 
     public TrainRoute() {
@@ -79,6 +80,23 @@ public class TrainRoute implements Serializable {
 
     public void setScheduleList(List<Schedule> scheduleList) {
         this.scheduleList = scheduleList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrainRoute that = (TrainRoute) o;
+        return Objects.equals(train, that.train) &&
+                Objects.equals(arrivalstation, that.arrivalstation) &&
+                Objects.equals(departurestation, that.departurestation) &&
+                Objects.equals(scheduleList, that.scheduleList);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(train, arrivalstation, departurestation, scheduleList);
     }
 
     @Override

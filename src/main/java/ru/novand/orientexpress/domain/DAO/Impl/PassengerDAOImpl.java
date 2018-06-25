@@ -61,22 +61,6 @@ public class PassengerDAOImpl implements PassengerDAO {
 
     }
 
-//    @Override
-//    public Passenger findById(int id) {
-//        TypedQuery<Passenger> query = manager.createNamedQuery("Passenger.find", Passenger.class);
-//        query.setParameter("passengerid", id);
-//        Passenger result = query.getSingleResult();
-//        return result;
-//    }
-//
-//    @Override
-//    public Passenger findByUserId(int userid) {
-//        TypedQuery<Passenger> query = manager.createNamedQuery("Passenger.findbyUserID", Passenger.class);
-//        query.setParameter("userid", userid);
-//        Passenger result = query.getSingleResult();
-//        return result;
-//    }
-
     @Override
     public Passenger findByUserName(String username) {
         TypedQuery<Passenger> query = manager.createNamedQuery("Passenger.findbyUserName", Passenger.class);

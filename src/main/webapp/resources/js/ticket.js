@@ -26,7 +26,7 @@ $(function() {
             location.href = "/payTicket?"+datareq;
             // $.ajax({
             //     type: "GET",
-            //     url: "http://localhost:8080/payTicket",
+            //     url: "http://localhost:8081/payTicket",
             //     data: datareq,
             //     success: function(response){
             //         window.location.href = "/paygate.html";

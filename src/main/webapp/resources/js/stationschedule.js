@@ -11,7 +11,7 @@ $(function() {
             var datareq = $("#schedule :input").serialize();
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/stationscheduleData",
+                url: "http://localhost:8081/stationscheduleData",
                 data: datareq,
                 success:function(data) {
                     $('#tableResult').html( data );

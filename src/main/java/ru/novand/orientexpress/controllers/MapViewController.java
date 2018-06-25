@@ -1,47 +1,35 @@
 package ru.novand.orientexpress.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.novand.orientexpress.domain.dto.MapPointDTO;
-import ru.novand.orientexpress.domain.dto.ScheduleDTO;
-import ru.novand.orientexpress.services.MapViewService;
-import ru.novand.orientexpress.services.ScheduleService;
+import ru.novand.orientexpress.services.impl.MapViewServiceImpl;
+import ru.novand.orientexpress.utils.Routes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 public class MapViewController {
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final MapViewServiceImpl mapViewService;
 
-    @Autowired
-    private MapViewService mapViewService;
+    private static final Logger logger = LoggerFactory.getLogger(MapViewController.class);
 
-    @GetMapping("/getmarkers")
+    public MapViewController(MapViewServiceImpl mapViewService) {
+        this.mapViewService = mapViewService;
+    }
+
+    @GetMapping(Routes.getmarkers)
     public List<MapPointDTO> getMarkers(@RequestParam String traincode, @RequestParam String departuredate, @RequestParam String fromSt, @RequestParam String toSt, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("MapViewController getmarkers is called");
 
-        List<ScheduleDTO> tariff = scheduleService.getTrainTariff(traincode, departuredate);
+        logger.debug("MapViewController getmarkers method was called");
 
-        List<ScheduleDTO> tariffOrdered = scheduleService.getTariffOrdered(tariff,fromSt,toSt);
-
-        List<String> citylist = scheduleService.getCityList(tariffOrdered);
-
-        List<MapPointDTO> mapPointDTOS = mapViewService.getJsonMarkers(citylist);
+        List<MapPointDTO> mapPointDTOS = mapViewService.getJsonMarkers(traincode, departuredate,fromSt,toSt);
 
         return mapPointDTOS;
     }
 
-//    @RequestMapping("/getmarkers")
-//    public List<MapPointDTO> getmarkers(@RequestParam(value="name", defaultValue="World") String name) {
-//
-//        String[] cities=null;
-//        List<MapPointDTO> mapPointDTOS = mapViewService.GetJsonMarkers(cities);
-//        return mapPointDTOS;
-//    }
 }

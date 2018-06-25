@@ -1,13 +1,10 @@
 package ru.novand.orientexpress.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.novand.orientexpress.domain.entities.Station;
-import ru.novand.orientexpress.services.StationService;
+import ru.novand.orientexpress.services.impl.StationServiceImpl;
+import ru.novand.orientexpress.utils.Routes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +14,13 @@ public class StationController {
 
     //TODO exceptionhandler
 
-    @Autowired
-    private StationService stationService;
+    private final StationServiceImpl stationService;
 
-    @RequestMapping(value = "/addstation", method = RequestMethod.GET)
+    public StationController(StationServiceImpl stationService) {
+        this.stationService = stationService;
+    }
+
+    @GetMapping(Routes.addstation)
     @ResponseBody
     public String addStation(@RequestParam("stationname") String stationname,
                                HttpServletRequest request, HttpServletResponse response) {

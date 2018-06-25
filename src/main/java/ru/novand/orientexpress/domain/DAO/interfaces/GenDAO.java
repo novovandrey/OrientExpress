@@ -5,6 +5,8 @@ import java.util.List;
 
 interface GenDAO <T extends Serializable> {
 
+
+
     T save(T entity);
 
     List<T> findAll();

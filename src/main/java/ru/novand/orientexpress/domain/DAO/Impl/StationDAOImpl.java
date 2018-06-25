@@ -38,6 +38,7 @@ public class StationDAOImpl implements StationDAO {
         return result;
     }
 
+    @Transactional
     @Override
     public Station delete(Station entity) {
         try {
@@ -48,6 +49,7 @@ public class StationDAOImpl implements StationDAO {
         return entity;
     }
 
+    @Transactional
     @Override
     public Station update(Station entity) {
         try {
