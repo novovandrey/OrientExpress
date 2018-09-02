@@ -17,10 +17,8 @@ import ru.novand.orientexpress.services.interfaces.ScheduleService;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,9 +52,12 @@ public class ScheduleServiceImplTest {
     @InjectMocks
     ScheduleService scheduleService = new ScheduleServiceImpl();
 
+    private DateTimeFormatter ddMMyyyyformatter;
+
     @Before
     public void setUp() throws Exception {
         initMocks(this);
+        ddMMyyyyformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     }
 
     @After
@@ -117,17 +118,10 @@ public class ScheduleServiceImplTest {
         //arrange
         String fromSt = "NewStation";
         String toSt = "NewStation2";
-        String departuredate = "2018-01-15";
-        String arrivaldate = "2018-01-18";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date depdate = null;
-        Date arrdate=null;
-        try {
-            depdate = sdf.parse(departuredate);
-            arrdate = sdf.parse(arrivaldate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        String departuredate = "15.01.2018 00:00";
+        String arrivaldate = "18.01.2018 00:00";
+        LocalDateTime depdate = LocalDateTime.parse(departuredate, ddMMyyyyformatter);
+        LocalDateTime arrdate = LocalDateTime.parse(arrivaldate, ddMMyyyyformatter);
 
         ScheduleDTO scheduleDTO = new ScheduleDTO("100",depdate,fromSt,arrdate,toSt);
 
@@ -301,7 +295,7 @@ public class ScheduleServiceImplTest {
 
         List<TrainScheduleDates> trainscheduledatesList = new ArrayList<>();
         TrainScheduleDates trainScheduleDates = new TrainScheduleDates();
-        trainScheduleDates.setDeparturedate(depdateLD);
+        //trainScheduleDates.setDeparturedate(depdateLD);
         trainScheduleDates.setTrain(trainMock);
         trainScheduleDates.setIdtrainschedule(1);
         trainscheduledatesList.add(trainScheduleDates);
@@ -309,7 +303,11 @@ public class ScheduleServiceImplTest {
         List<ScheduleDTO> scheduleDTOListResult = new ArrayList<>();
         List<ScheduleDTO> scheduleDTOListExpected = new ArrayList<>();
         String departuredateFormat = "15.01.2018";
-        ScheduleDTO scheduleDTOExpected =new ScheduleDTO("100", depdate,"NewStation","NewStation2");
+
+        String departuredate1 = "15.01.2018 00:00";
+        LocalDateTime depdateLD1 = LocalDateTime.parse(departuredate1, ddMMyyyyformatter);
+
+        ScheduleDTO scheduleDTOExpected =new ScheduleDTO("100", depdateLD1,"NewStation","NewStation2");
         scheduleDTOListExpected.add(scheduleDTOExpected);
 
         TrainRoute trainRoute = new TrainRoute();

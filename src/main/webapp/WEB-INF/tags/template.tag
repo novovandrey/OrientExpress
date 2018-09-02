@@ -9,17 +9,22 @@
 <%@attribute name="header" fragment="true" %>
 <html>
 <head>
-    <spring:url value="/resources/css/modern-business.css" var="startertemplate"/>
-    <spring:url value="/resources/font-awesome/css/font-awesome.min.css" var="fontawesome"/>
-    <spring:url value="/resources/css/schedule.css" var="schedule" />
+    <link rel="icon" href="/resources/images/National_Rail_logo.svg">
+    <spring:url value="/resources/css/schedule_custom.css" var="schedule_custom" />
     <spring:url value="/resources/css/ticket.css" var="ticket" />
-    <spring:url value="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" var="jqueryjs"/>
-    <spring:url value="/resources/js/bootstrap.min.js" var="js"/>
+    <spring:url value="/resources/js/jquery-3.3.1.min.js" var="jqueryjs"/>
     <spring:url value="/resources/js/materialize.min.js" var="materializejs"/>
     <spring:url value="/resources/css/materialize.css" var="materializecss"/>
     <spring:url value="/resources/js/custom.js" var="customjs"/>
+    <spring:url value="/resources/js/sweetalert2.all.min.js" var="sweetalertjs"/>
+    <script src="${jqueryjs}"></script>
+    <script src="${sweetalertjs}"></script>
+    <!-- tablesorter plugin -->
+    <script src="/resources/js/jquery.tablesorter.js"></script>
 
-    <title><jsp:invoke fragment="title"/></title>
+    <script src="/resources/js/jquery.tablesorter.pager.js"></script>
+    <title>OrientExpress</title>
+
 
     <!-- Bootstrap Core Min CSS -->
 
@@ -30,15 +35,11 @@
     <link href="${materializecss}" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom CSS -->
-    <script src="${jqueryjs}"></script>
-    <!--link href="${startertemplate}" rel="stylesheet" /-->
 
     <!-- Custom Fonts -->
 
-    <!--link href="${fontawesome}" rel="stylesheet" /-->
 
-
-    <!--link href="${schedule}" rel="stylesheet" /-->
+    <link href="${schedule_custom}" rel="stylesheet">
 
 
     <!--link href="${ticket}" rel="stylesheet" /-->
@@ -58,7 +59,11 @@
     <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 
     <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
-
+    <style>
+        .btn { font-size: .8em; }
+        /* not sure why this is needed... */
+        .material-icons { vertical-align: bottom; }
+    </style>
 </head>
 
 <body>
@@ -67,7 +72,7 @@
 <headerTemplate:header-template/>
 
 <jsp:doBody/>
-
+<br><br><br><br><br><br><br><br><br>
 </body>
 
 </html>

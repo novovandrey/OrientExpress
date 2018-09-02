@@ -1,4 +1,7 @@
 $(function() {
+    M.updateTextFields();
+    var datepickerinctsnce = $('.datepicker').datepicker({ format: 'dd.mm.yyyy' }, { showClearBtn: true });
+
     $('#tableResult').hide(1);
     $( "#getScheduleByStation" ).click(function( ) {
         $('#tableResult').hide(1);
@@ -8,7 +11,7 @@ $(function() {
             var datareq = $("#schedule :input").serialize();
             $.ajax({
                 type: "GET",
-                url: "http://localhost:8080/stationscheduleData",
+                url: "http://localhost:8081/stationscheduleData",
                 data: datareq,
                 success:function(data) {
                     $('#tableResult').html( data );
@@ -21,5 +24,5 @@ $(function() {
             alert("please fill form");
         }
     });
-
+    $("#myTable").tablesorter();
 });

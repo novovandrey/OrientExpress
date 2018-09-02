@@ -45,13 +45,13 @@ public class TrainScheduleServiceImplTest {
         TrainScheduleDates trainScheduleDates = new TrainScheduleDates();
         trainScheduleDates.setIdtrainschedule(1);
         trainScheduleDates.setTrain(trainMock);
-        trainScheduleDates.setDeparturedate(mockdate);
+        //trainScheduleDates.setDeparturedate(mockdate);
 
         TrainScheduleDates trainScheduleDatesResult = new TrainScheduleDates();
         TrainScheduleDates trainScheduleDatesExpected = new TrainScheduleDates();
         trainScheduleDatesExpected.setIdtrainschedule(1);
         trainScheduleDatesExpected.setTrain(trainMock);
-        trainScheduleDatesExpected.setDeparturedate(mockdate);
+        //trainScheduleDatesExpected.setDeparturedate(mockdate);
 
         //act
         when(trainDAO.findByCode(anyString())).thenReturn(trainMock);
@@ -75,7 +75,7 @@ public class TrainScheduleServiceImplTest {
         TrainScheduleDates trainScheduleDates = new TrainScheduleDates();
         trainScheduleDates.setIdtrainschedule(1);
         trainScheduleDates.setTrain(trainMock);
-        trainScheduleDates.setDeparturedate(mockdate);
+        //trainScheduleDates.setDeparturedate(mockdate);
         List<TrainScheduleDates> trainScheduleDatesList = new ArrayList<>();
         trainScheduleDatesList.add(trainScheduleDates);
 

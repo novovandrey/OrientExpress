@@ -9,17 +9,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <div class="container">
 
-            <nav class="dot">
-                <div class="nav-wrapper">
-                    <div class="col s12">
-                        <a href="index.html" class="breadcrumb">Home</a>
-                        <a href="/schedule" class="breadcrumb">Schedule</a>
-                    </div>
-                </div>
-            </nav>
-
-            <c:if test="${!empty ticketResult}">
-                <div style="margin-top: 6vw;" class="card-panel red lighten-2"><strong>${msg}</strong></div>
+            <c:if test="${!empty msg}">
+                <div style="margin-top: 6vw;" class="card-panel indigo lighten-2"><strong>${msg}</strong></div>
             </c:if>
 
         </div>

@@ -1,0 +1,48 @@
+
+#tableRow .active{
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.borderpx {
+	border: 2px solid #4994e3 !important;
+	border-radius: 2px;
+}
+
+.margintop100 {
+	 margin-top: 100px;
+ }
+
+.margintop50 {
+	margin-top: 50px;
+}
+
+.margintop25 {
+	margin-top: 25px;
+}
+
+.backpicture {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.card-panel{
+	background-color: #ffffffd1;
+}
+
+.navbar-logo{
+	margin-left: 20px;
+}
+
+#Pay{
+	margin-bottom: 1vw;
+}
+
+
+.switchbtn{
+	border: none;
+	height: 2.1875rem;
+	width: 2.1875rem;
+}

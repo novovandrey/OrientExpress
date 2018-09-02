@@ -16,60 +16,45 @@
     <link href="${materializecss}" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="${materializejs}"></script>
+
 </head>
 <body>
+
 <div class="valign-wrapper row">
-    <div class="col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4">
-        <form name="form" action="j_spring_security_check" method="post" class="form-signin">
-            <div class="card-content">
-                <security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_USER', 'ROLE_USER')" var="isUSer"/>
-                <font size="2" color="red">
-                    <c:if test="${not isUSer}">
-                        <c:if test="${empty param.error}">
-                            You are not login
-                        </c:if>
+    <div class="col card hoverable s12 pull-s1 m6 pull-m3 l4 pull-l4">
+        <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; border: 1px solid #EEE;">
+            <form name="form" action="j_spring_security_check" method="post" class="form-signin">
+                <div class="card-content">
+                    <br/>
+                    <c:if test="${not empty param.error}">
+                        <font size="2" color="red"><b> Incorrect login or password</b></font>
                     </c:if>
-                </font>
 
-                <font size="2" color="green">
-                    <c:if test="${isUSer}">You login as:
-                        <security:authentication property="principal.username"/> with role:
-                        <b><security:authentication property="principal.authorities"/></b>
-                    </c:if>
-                </font>
-                <br/>
-                <c:if test="${not empty param.error}">
-                    <font size="2" color="red"><b> Incorrect login or password</b></font>
-                </c:if>
-
-                <h2 class="form-signin-heading"> Please, login</h2>
-
-                <label for="inputEmail" class="sr-only"><spring:message code="email" text="Email"/></label>
-                <input id="inputEmail" class="form-control validate" name="j_username" value="admin@gmail.com" required autofocus/>
-
-                <label for="inputPassword" class="sr-only"><spring:message code="pass" text="Password"/></label>
-                <input type="password" id="inputPassword" class="form-control validate" name="j_password" value="12345" required/>
-
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="rememberme"  name="_spring_security_remember_me"/>Remember me
-                    </label>
+                    <h3 class="form-signin-heading"> Please, login</h3>
+                    <div class="input-field col s12 m12">
+                        <i class="material-icons prefix">person_pin</i>
+                        <input id="inputEmail" type="text" class="validate" name="j_username"/>
+                        <label for="inputEmail" ><spring:message code="login"/></label>
+                    </div>
+                    <div class="input-field col s12 m12">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input type="password" id="inputPassword" class="validate" name="j_password"/>
+                        <label for="inputPassword"><spring:message code="pass"/></label>
+                    </div>
+                    <center>
+                        <div class="input-field col s12 m12">
+                            <button type="submit" class='col s12 btn btn-large waves-effect indigo' >Login</button>
+                        </div>
+                    </center>
                 </div>
-                <input type="submit" value="Войти" class="btn waves-effect waves-light" >
-                <br/>
-                <a href="javascript:history.back()">Back</a>
-
-                <br /><br />
-                <p> Available roles:</p>
-
-                <b>ROLE_SUPER_USER</b><br />
-                Login:<span style="color: royalblue">superuser@outlook.com</span> Password: <span style="color: royalblue">12345</span> <br />
-                <b>ROLE_ADMIN</b> <br />
-                Login:<span style="color: royalblue">admin@gmail.com</span> Password: <span style="color: royalblue">12345</span> <br />
-                <b>ROLE_USER</b> <br />
-                Login: <span style="color: royalblue">roleuser@outlook.com</span> Password: <span style="color: royalblue">12345</span>
-            </div>
-        </form>
+            </form>
+        </div>
+        <div style="text-align: center;" class="input-field col s12 m12">
+            <a href="/registration">Create an account</a>
+        </div>
+        <div class="input-field col s12 m12">
+            <a href="javascript:history.back()">Back</a><br/><br/>
+        </div>
     </div>
 </div>
 </body>
